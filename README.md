@@ -58,8 +58,8 @@ bash is /bin/bash
 vagrant@vagrant:~$ mkdir /tmp/new_path_directory/
 vagrant@vagrant:~$ cp /bin/bash /tmp/new_path_directory/
 vagrant@vagrant:~$ path=/tmp/new_path_directory/:$PATH
-vagrant@vagrant:~$ type -a bash
 
+vagrant@vagrant:~$ type -a bash
 bash is /tmp/new_path_directory/bash
 bash is /usr/bin/bash
 bash is /bin/bash
