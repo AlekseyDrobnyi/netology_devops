@@ -90,17 +90,47 @@ tttttt
 создали новый дескриптор, затем поменял стандартные потоки местами через промежуточный новый дескриптор
 
 9. Что выведет команда cat /proc/$$/environ? Как еще можно получить аналогичный по содержанию вывод?
+vagrant@vagrant:~$ vim /proc/$$/environ - можно открыть файл в редакторе vim, хатем выйти из него не сохраняя.
+в файле лежат различные переменные окружения.
 
 10. Используя man, опишите что доступно по адресам /proc/<PID>/cmdline, /proc/<PID>/exe.
-
+/proc/[pid]/cmdline - This read-only file holds the complete command  line  for  the  process,  unless  the process  is  a zombie. line 248
+Файл, который содержит полную командную строку для процесса ID.
+/proc/[pid]/exe - Under Linux 2.2 and later, this file is a symbolic link containing the  actual  path‐name  of  the executed command. line 289
+Это файл с ссылкой,содержащей фактический путь к выполняемой команде.
+           
+           
 11. Узнайте, какую наиболее старшую версию набора инструкций SSE поддерживает ваш процессор с помощью /proc/cpuinfo.
+vagrant@vagrant:~$ grep sse /proc/cpuinfo
+sse 4_2 
 
 12. При открытии нового окна терминала и vagrant ssh создается новая сессия и выделяется pty. Это можно подтвердить командой tty, которая упоминалась в лекции 3.2. Однако:
 
 vagrant@netology1:~$ ssh localhost 'tty'
 not a tty
 Почитайте, почему так происходит, и как изменить поведение.
+При запуске ожидается авторизация, после получаю ошибку.           
+исправить это можно при помощи -t. Как понял, что происходит создание принудительного псевдонима
+           Force pseudo-tty allocation.  This can be used to execute arbitrary  screen-based programs on a remote machine, which can be very useful, e.g. when implementing menu services.  Multiple -t options force tty allocation, even if ssh has no local tty.
+vagrant@vagrant:~$ ssh localhost 'tty'
+vagrant@localhost's password:
+not a tty
+vagrant@vagrant:~$ ssh -t localhost 'tty'
+vagrant@localhost's password:
+/dev/pts/2
+Connection to localhost closed.
 
+       
 13. Бывает, что есть необходимость переместить запущенный процесс из одной сессии в другую. Попробуйте сделать это, воспользовавшись reptyr. Например, так можно перенести в screen процесс, который вы запустили по ошибке в обычной SSH-сессии.
+Изначально ругался на "bash: reptyr: command not found" ,после установки sudo apt-get install reptyr
+жаловался на права
+vagrant@vagrant:~$ sudo reptyr 4071
+[-] Unable to open the tty in the child.
+Unable to attach to pid 4071: Permission denied
+
+добавил ключ -Т, тогда получилось перехватить vim редактор из соседней консоли.
+ vagrant@vagrant:~$ sudo reptyr -T 4071
+"www.txt" 6L, 33C written          
+           
 
 14. sudo echo string > /root/new_file не даст выполнить перенаправление под обычным пользователем, так как перенаправлением занимается процесс shell'а, который запущен без sudo под вашим пользователем. Для решения данной проблемы можно использовать конструкцию echo string | sudo tee /root/new_file. Узнайте что делает команда tee и почему в отличие от sudo echo команда с sudo tee будет работать.
