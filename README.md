@@ -1,73 +1,140 @@
-1. Установите средство виртуализации Oracle VirtualBox.
-уже было установлено на ПК
+1. Какого типа команда cd? Попробуйте объяснить, почему она именно такого типа; опишите ход своих мыслей, если считаете что она могла бы быть другого типа.
+cd is a shell builtin
+это встроенная команда. Встроенная, наверно потому что используется для смены директории в текущей сессии при подключении к консоли. 
 
-2. Установите средство автоматизации Hashicorp Vagrant.
-Установлено
 
-3. В вашем основном окружении подготовьте удобный для дальнейшей работы терминал. Можно предложить:
-Windows Terminal в Windows
+2. Какая альтернатива без pipe команде grep <some_string> <some_file> | wc -l? man grep поможет в ответе на этот вопрос. Ознакомьтесь с документом о других подобных некорректных вариантах использования pipe.
+vagrant@vagrant:~$ cat www.txt
+qqqqqq
+wwwwww
+22222
+123
+322
 
-4. С помощью базового файла конфигурации запустите Ubuntu 20.04 в VirtualBox посредством Vagrant:
-Выполнено
+vagrant@vagrant:~$ grep 2 www.txt | wc -l
+3
+vagrant@vagrant:~$ grep 22222 www.txt | wc -l
+1
+vagrant@vagrant:~$ grep 2 www.txt -c
+3
+vagrant@vagrant:~$ grep 22222 www.txt -c
+1
 
-5. Ознакомьтесь с графическим интерфейсом VirtualBox, посмотрите как выглядит виртуальная машина, которую создал для вас Vagrant, какие аппаратные ресурсы ей выделены. Какие ресурсы выделены по-умолчанию?
-RAM: 1024 MB
-CPU: 2 CPU
-SataControler: 64 GB
-video: 4 MB
 
-6. Ознакомьтесь с возможностями конфигурации VirtualBox через Vagrantfile: документация. Как добавить оперативной памяти или ресурсов процессора виртуальной машине?
-config.vm.provider "virtualbox" do |v|
-  v.memory = 1024
-  v.cpus = 2
-end
 
-7. Команда vagrant ssh из директории, в которой содержится Vagrantfile, позволит вам оказаться внутри виртуальной машины без каких-либо дополнительных настроек. Попрактикуйтесь в выполнении обсуждаемых команд в терминале Ubuntu.
-Выполнено
+3. Какой процесс с PID 1 является родителем для всех процессов в вашей виртуальной машине Ubuntu 20.04?
+vagrant@vagrant:~$ pstree -p
+systemd(1)─┬─VBoxService(838)─┬─{VBoxService}(839)
+           │                  ├─{VBoxService}(840)
 
-8. Ознакомиться с разделами man bash, почитать о настройках самого bash:
-какой переменной можно задать длину журнала history, и на какой строчке manual это описывается?
-HISTFILESIZE - The maximum number of lines contained in the history file. line 846 (Максимальное количество строк, содержащихся в файле истории)
-HISTSIZE - The number of commands to remember in the command history (see HISTORY below). line 862 (Количество команд, которые нужно запомнить в истории команд)
 
-что делает директива ignoreboth в bash?
-ignoreboth is shorthand for ignorespace and ignoredups. (является сокращением для ignorespace и ignoredups)
-ignorespace - lines which begin with a space character are not saved in  the  history list. (строки, начинающиеся с пробела, не сохраняются в списке истории)
-ignoredups - causes lines matching the previous history entry to not be saved. (заставляет строки, соответствующие предыдущей записи истории, не сохраняться)
+4. Как будет выглядеть команда, которая перенаправит вывод stderr ls на другую сессию терминала?
+vagrant@vagrant:~$ who
+vagrant  pts/0        2022-03-27 02:22 (10.0.2.2)
+vagrant  pts/1        2022-03-27 03:38 (10.0.2.2)
+vagrant@vagrant:~$ ls -l \root 2>/dev/pts/1
 
-9. В каких сценариях использования применимы скобки {} и на какой строчке man bash это описано?
-( and ), { and } are reserved words and must occur where a reserved  word  is permitted  to be recognized. line 221 (являются зарезервированными словами и должны встречаться там, где разрешено распознавание зарезервированного слова.) используются в различных циклах
+во втором терминале получил
+vagrant@vagrant:~$ ls: cannot access 'root': No such file or directory
 
-10. С учётом ответа на предыдущий вопрос, как создать однократным вызовом touch 100000 файлов? Получится ли аналогичным образом создать 300000? Если нет, то почему?
- touch {000001..100000}.txt - создалось 100000 .txt файлов в текущей дериктории
- 
- touch {000001..300000}.txt - не создает, т.к. сильно большое значение
--bash: /usr/bin/touch: Argument list too long
 
-11. В man bash поищите по /\[\[. Что делает конструкция [[ -d /tmp ]]
-[[ expression ]] Return a status of 0 or 1 depending on the evaluation of the conditional  expression  expression. (Возвращает статус 0 или 1 в зависимости от условного выражения.) проверяет наличие каталого tmp
+5. Получится ли одновременно передать команде файл на stdin и вывести ее stdout в другой файл? Приведите работающий пример.
+vagrant@vagrant:~$ cat www.txt
+qqqqqq
+wwwwww
+22222
+123
+322
 
-12. Основываясь на знаниях о просмотре текущих (например, PATH) и установке новых переменных; командах, которые мы рассматривали, добейтесь в выводе type -a bash в виртуальной машине наличия первым пунктом в списке:
-bash is /tmp/new_path_directory/bash
-bash is /usr/local/bin/bash
-bash is /bin/bash
+vagrant@vagrant:~$ cat newWWW.txt
+cat: newWWW.txt: No such file or directory
+vagrant@vagrant:~$ cat < www.txt > newWWW.txt
+vagrant@vagrant:~$ cat newWWW.txt
+qqqqqq
+wwwwww
+22222
+123
+322
 
-vagrant@vagrant:~$ type -a bash
-bash is /usr/bin/bash
-bash is /bin/bash
-vagrant@vagrant:~$ mkdir /tmp/new_path_directory/
-vagrant@vagrant:~$ cp /bin/bash /tmp/new_path_directory/
-vagrant@vagrant:~$ path=/tmp/new_path_directory/:$PATH
+vagrant@vagrant:~$
 
-vagrant@vagrant:~$ type -a bash
-bash is /tmp/new_path_directory/bash
-bash is /usr/bin/bash
-bash is /bin/bash
-(прочие строки могут отличаться содержимым и порядком) В качестве ответа приведите команды, которые позволили вам добиться указанного вывода или соответствующие скриншоты.
 
-13. Чем отличается планирование команд с помощью batch и at?
-Команда at используется для назначения одноразового задания на заданное время, 
-а команда batch — для назначения одноразовых задач, которые должны выполняться, когда загрузка системы становится меньше 0,8
+6. Получится ли находясь в графическом режиме, вывести данные из PTY в какой-либо из эмуляторов TTY? Сможете ли вы наблюдать выводимые данные?
+vagrant@vagrant:~$ who
+vagrant  pts/0        2022-03-27 02:22 (10.0.2.2)
+vagrant  pts/1        2022-03-27 04:11 (10.0.2.2)
+vagrant  tty2         2022-03-27 04:28
+vagrant@vagrant:~$ echo hello! Hola! >/dev/tty2
+vagrant@vagrant:~$ tty
+/dev/pts/0
+Данные получилось наблюдать, когда открыл в VirtualBox ВМ. На TTY получилось отправить данные.
 
-14. Завершите работу виртуальной машины чтобы не расходовать ресурсы компьютера и/или батарею ноутбука.
-vagrant suspend
+7. Выполните команду bash 5>&1. К чему она приведет? Что будет, если вы выполните echo netology > /proc/$$/fd/5? Почему так происходит?
+bash 5>&1 - создаст новый дескриптор и направить поток в stdout
+
+vagrant@vagrant:~$ echo netology > /proc/$$/fd/5
+netology
+vagrant@vagrant:~$
+Произойдет вывод в дескриптор 5
+
+
+8. Получится ли в качестве входного потока для pipe использовать только stderr команды, не потеряв при этом отображение stdout на pty? Напоминаем: по умолчанию через pipe передается только stdout команды слева от | на stdin команды справа. Это можно сделать, поменяв стандартные потоки местами через промежуточный новый дескриптор, который вы научились создавать в предыдущем вопросе.
+vagrant@vagrant:~$ cat zxc.txt
+cat: zxc.txt: No such file or directory
+vagrant@vagrant:~$ cat zxc.txt 8>&1 1>&2 2>&8 | wc -c
+40
+vagrant@vagrant:~$ echo tttttt > zxc.txt
+vagrant@vagrant:~$ cat zxc.txt 8>&1 1>&2 2>&8 | wc -c
+tttttt
+0
+создали новый дескриптор, затем поменял стандартные потоки местами через промежуточный новый дескриптор
+
+9. Что выведет команда cat /proc/$$/environ? Как еще можно получить аналогичный по содержанию вывод?
+vagrant@vagrant:~$ vim /proc/$$/environ - можно открыть файл в редакторе vim, хатем выйти из него не сохраняя.
+в файле лежат различные переменные окружения.
+
+10. Используя man, опишите что доступно по адресам /proc/<PID>/cmdline, /proc/<PID>/exe.
+/proc/[pid]/cmdline - This read-only file holds the complete command  line  for  the  process,  unless  the process  is  a zombie. line 248
+Файл, который содержит полную командную строку для процесса ID.
+/proc/[pid]/exe - Under Linux 2.2 and later, this file is a symbolic link containing the  actual  path‐name  of  the executed command. line 289
+Это файл с ссылкой,содержащей фактический путь к выполняемой команде.
+           
+           
+11. Узнайте, какую наиболее старшую версию набора инструкций SSE поддерживает ваш процессор с помощью /proc/cpuinfo.
+vagrant@vagrant:~$ grep sse /proc/cpuinfo
+sse 4_2 
+
+12. При открытии нового окна терминала и vagrant ssh создается новая сессия и выделяется pty. Это можно подтвердить командой tty, которая упоминалась в лекции 3.2. Однако:
+
+vagrant@netology1:~$ ssh localhost 'tty'
+not a tty
+Почитайте, почему так происходит, и как изменить поведение.
+При запуске ожидается авторизация, после получаю ошибку.           
+исправить это можно при помощи -t. Как понял, что происходит создание принудительного псевдонима
+           Force pseudo-tty allocation.  This can be used to execute arbitrary  screen-based programs on a remote machine, which can be very useful, e.g. when implementing menu services.  Multiple -t options force tty allocation, even if ssh has no local tty.
+vagrant@vagrant:~$ ssh localhost 'tty'
+vagrant@localhost's password:
+not a tty
+vagrant@vagrant:~$ ssh -t localhost 'tty'
+vagrant@localhost's password:
+/dev/pts/2
+Connection to localhost closed.
+
+       
+13. Бывает, что есть необходимость переместить запущенный процесс из одной сессии в другую. Попробуйте сделать это, воспользовавшись reptyr. Например, так можно перенести в screen процесс, который вы запустили по ошибке в обычной SSH-сессии.
+Изначально ругался на "bash: reptyr: command not found" ,после установки sudo apt-get install reptyr
+жаловался на права
+vagrant@vagrant:~$ sudo reptyr 4071
+[-] Unable to open the tty in the child.
+Unable to attach to pid 4071: Permission denied
+
+добавил ключ -Т, тогда получилось перехватить vim редактор из соседней консоли.
+ vagrant@vagrant:~$ sudo reptyr -T 4071
+"www.txt" 6L, 33C written          
+           
+
+14. sudo echo string > /root/new_file не даст выполнить перенаправление под обычным пользователем, так как перенаправлением занимается процесс shell'а, который запущен без sudo под вашим пользователем. Для решения данной проблемы можно использовать конструкцию echo string | sudo tee /root/new_file. Узнайте что делает команда tee и почему в отличие от sudo echo команда с sudo tee будет работать.
+tee - read from standard input and write to standard output and files
+           
+Команда завершается ошибкой, потому что sudo не выполняет перенаправление вывода, это произойдет как непривилегированный пользователь.
+А добавив tee, получаем вывод команды echo, повышаем права на sudo и записываем в файл вывод.
