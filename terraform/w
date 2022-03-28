@@ -1,0 +1,170 @@
+[33mcommit 5af1e6234ab6da412fb8637393c5a17a1b293663[m
+Author: Martin Atkins <mart@degeneration.co.uk>
+Date:   Tue Apr 21 16:28:59 2020 -0700
+
+    main: Honor explicit provider_installation CLI config when present
+    
+    If the CLI configuration contains a provider_installation block then we'll
+    use the source configuration it describes instead of the implied one we'd
+    build otherwise.
+
+[1mdiff --git a/main.go b/main.go[m
+[1mindex f9a3b9cf8..09da719c4 100644[m
+[1m--- a/main.go[m
+[1m+++ b/main.go[m
+[36m@@ -127,6 +127,7 @@[m [mfunc wrappedMain() int {[m
+ 	log.Printf("[INFO] CLI args: %#v", os.Args)[m
+ [m
+ 	config, diags := cliconfig.LoadConfig()[m
+[32m+[m
+ 	if len(diags) > 0 {[m
+ 		// Since we haven't instantiated a command.Meta yet, we need to do[m
+ 		// some things manually here and use some "safe" defaults for things[m
+[36m@@ -168,7 +169,22 @@[m [mfunc wrappedMain() int {[m
+ 	// direct from a registry. In future there should be a mechanism to[m
+ 	// configure providers sources from the CLI config, which will then[m
+ 	// change how we construct this object.[m
+[31m-	providerSrc := providerSource(services)[m
+[32m+[m	[32mproviderSrc, diags := providerSource(config.ProviderInstallation, services)[m
+[32m+[m	[32mif len(diags) > 0 {[m
+[32m+[m		[32mUi.Error("There are some problems with the provider_installation configuration:")[m
+[32m+[m		[32mfor _, diag := range diags {[m
+[32m+[m			[32mearlyColor := &colorstring.Colorize{[m
+[32m+[m				[32mColors:  colorstring.DefaultColors,[m
+[32m+[m				[32mDisable: true, // Disable color to be conservative until we know better[m
+[32m+[m				[32mReset:   true,[m
+[32m+[m			[32m}[m
+[32m+[m			[32mUi.Error(format.Diagnostic(diag, nil, earlyColor, 78))[m
+[32m+[m		[32m}[m
+[32m+[m		[32mif diags.HasErrors() {[m
+[32m+[m			[32mUi.Error("As a result of the above problems, Terraform's provider installer may not behave as intended.\n\n")[m
+[32m+[m			[32m// We continue to run anyway, because most commands don't do provider installation.[m
+[32m+[m		[32m}[m
+[32m+[m	[32m}[m
+ [m
+ 	// Initialize the backends.[m
+ 	backendInit.Init(services)[m
+[1mdiff --git a/provider_source.go b/provider_source.go[m
+[1mindex 8e91658a8..bfbdf0f3f 100644[m
+[1m--- a/provider_source.go[m
+[1m+++ b/provider_source.go[m
+[36m@@ -1,28 +1,76 @@[m
+ package main[m
+ [m
+ import ([m
+[32m+[m	[32m"fmt"[m
+ 	"log"[m
+ 	"os"[m
+ 	"path/filepath"[m
+ [m
+ 	"github.com/apparentlymart/go-userdirs/userdirs"[m
+[32m+[m	[32msvchost "github.com/hashicorp/terraform-svchost"[m
+ 	"github.com/hashicorp/terraform-svchost/disco"[m
+ [m
+ 	"github.com/hashicorp/terraform/addrs"[m
+ 	"github.com/hashicorp/terraform/command/cliconfig"[m
+ 	"github.com/hashicorp/terraform/internal/getproviders"[m
+[32m+[m	[32m"github.com/hashicorp/terraform/tfdiags"[m
+ )[m
+ [m
+ // providerSource constructs a provider source based on a combination of the[m
+ // CLI configuration and some default search locations. This will be the[m
+ // provider source used for provider installation in the "terraform init"[m
+ // command, unless overridden by the special -plugin-dir option.[m
+[31m-func providerSource(services *disco.Disco) getproviders.Source {[m
+[31m-	// We're not yet using the CLI config here because we've not implemented[m
+[31m-	// yet the new configuration constructs to customize provider search[m
+[31m-	// locations. That'll come later. For now, we just always use the[m
+[31m-	// implicit default provider source.[m
+[31m-	return implicitProviderSource(services)[m
+[32m+[m[32mfunc providerSource(configs []*cliconfig.ProviderInstallation, services *disco.Disco) (getproviders.Source, tfdiags.Diagnostics) {[m
+[32m+[m	[32mif len(configs) == 0 {[m
+[32m+[m		[32m// If there's no explicit installation configuration then we'll build[m
+[32m+[m		[32m// up an implicit one with direct registry installation along with[m
+[32m+[m		[32m// some automatically-selected local filesystem mirrors.[m
+[32m+[m		[32mreturn implicitProviderSource(services), nil[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32m// There should only be zero or one configurations, which is checked by[m
+[32m+[m	[32m// the validation logic in the cliconfig package. Therefore we'll just[m
+[32m+[m	[32m// ignore any additional configurations in here.[m
+[32m+[m	[32mconfig := configs[0][m
+[32m+[m	[32mreturn explicitProviderSource(config, services)[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunc explicitProviderSource(config *cliconfig.ProviderInstallation, services *disco.Disco) (getproviders.Source, tfdiags.Diagnostics) {[m
+[32m+[m	[32mvar diags tfdiags.Diagnostics[m
+[32m+[m	[32mvar searchRules []getproviders.MultiSourceSelector[m
+[32m+[m
+[32m+[m	[32mfor _, sourceConfig := range config.Sources {[m
+[32m+[m		[32msource, moreDiags := providerSourceForCLIConfigLocation(sourceConfig.Location, services)[m
+[32m+[m		[32mdiags = diags.Append(moreDiags)[m
+[32m+[m		[32mif moreDiags.HasErrors() {[m
+[32m+[m			[32mcontinue[m
+[32m+[m		[32m}[m
+[32m+[m
+[32m+[m		[32minclude, err := getproviders.ParseMultiSourceMatchingPatterns(sourceConfig.Include)[m
+[32m+[m		[32mif err != nil {[m
+[32m+[m			[32mdiags = diags.Append(tfdiags.Sourceless([m
+[32m+[m				[32mtfdiags.Error,[m
+[32m+[m				[32m"Invalid provider source inclusion patterns",[m
+[32m+[m				[32mfmt.Sprintf("CLI config specifies invalid provider inclusion patterns: %s.", err),[m
+[32m+[m			[32m))[m
+[32m+[m		[32m}[m
+[32m+[m		[32mexclude, err := getproviders.ParseMultiSourceMatchingPatterns(sourceConfig.Include)[m
+[32m+[m		[32mif err != nil {[m
+[32m+[m			[32mdiags = diags.Append(tfdiags.Sourceless([m
+[32m+[m				[32mtfdiags.Error,[m
+[32m+[m				[32m"Invalid provider source exclusion patterns",[m
+[32m+[m				[32mfmt.Sprintf("CLI config specifies invalid provider exclusion patterns: %s.", err),[m
+[32m+[m			[32m))[m
+[32m+[m		[32m}[m
+[32m+[m
+[32m+[m		[32msearchRules = append(searchRules, getproviders.MultiSourceSelector{[m
+[32m+[m			[32mSource:  source,[m
+[32m+[m			[32mInclude: include,[m
+[32m+[m			[32mExclude: exclude,[m
+[32m+[m		[32m})[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32mreturn getproviders.MultiSource(searchRules), diags[m
+ }[m
+ [m
+ // implicitProviderSource builds a default provider source to use if there's[m
+[36m@@ -130,3 +178,36 @@[m [mfunc implicitProviderSource(services *disco.Disco) getproviders.Source {[m
+ [m
+ 	return getproviders.MultiSource(searchRules)[m
+ }[m
+[32m+[m
+[32m+[m[32mfunc providerSourceForCLIConfigLocation(loc cliconfig.ProviderInstallationSourceLocation, services *disco.Disco) (getproviders.Source, tfdiags.Diagnostics) {[m
+[32m+[m	[32mif loc == cliconfig.ProviderInstallationDirect {[m
+[32m+[m		[32mreturn getproviders.NewMemoizeSource([m
+[32m+[m			[32mgetproviders.NewRegistrySource(services),[m
+[32m+[m		[32m), nil[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32mswitch loc := loc.(type) {[m
+[32m+[m
+[32m+[m	[32mcase cliconfig.ProviderInstallationFilesystemMirror:[m
+[32m+[m		[32mreturn getproviders.NewFilesystemMirrorSource(string(loc)), nil[m
+[32m+[m
+[32m+[m	[32mcase cliconfig.ProviderInstallationNetworkMirror:[m
+[32m+[m		[32mhost, err := svchost.ForComparison(string(loc))[m
+[32m+[m		[32mif err != nil {[m
+[32m+[m			[32mvar diags tfdiags.Diagnostics[m
+[32m+[m			[32mdiags = diags.Append(tfdiags.Sourceless([m
+[32m+[m				[32mtfdiags.Error,[m
+[32m+[m				[32m"Invalid hostname for provider installation source",[m
+[32m+[m				[32mfmt.Sprintf("Cannot parse %q as a hostname for a network provider mirror: %s.", string(loc), err),[m
+[32m+[m			[32m))[m
+[32m+[m			[32mreturn nil, diags[m
+[32m+[m		[32m}[m
+[32m+[m		[32mreturn getproviders.NewNetworkMirrorSource(host), nil[m
+[32m+[m
+[32m+[m	[32mdefault:[m
+[32m+[m		[32m// We should not get here because the set of cases above should[m
+[32m+[m		[32m// be comprehensive for all of the[m
+[32m+[m		[32m// cliconfig.ProviderInstallationLocation implementations.[m
+[32m+[m		[32mpanic(fmt.Sprintf("unexpected provider source location type %T", loc))[m
+[32m+[m	[32m}[m
+[32m+[m[32m}[m
