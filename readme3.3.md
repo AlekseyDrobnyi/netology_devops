@@ -15,7 +15,7 @@ openat(AT_FDCWD, "/usr/share/misc/magic.mgc", O_RDONLY) = 3
 vagrant@vagrant:~$ exec 5>log.txt
 vagrant@vagrant:~$ ping localhost >&5
 
-vagrant@vagrant:~$ ps -aux
+vagrant@vagrant:~$ ps aux
 vagrant     1448  0.0  0.1   7172  2732 pts/0    S+   02:51   0:00 ping localhost
 vagrant@vagrant:~$ rm log.txt
 vagrant@vagrant:~$ sudo lsof -p 1448 | grep log
@@ -23,6 +23,7 @@ ping    1448 vagrant    5w   REG  253,0    44245 1048609 /home/vagrant/log.txt (
 vagrant@vagrant:~$ echo "" | sudo tee /proc/1448/fd/5
 
 4. Занимают ли зомби-процессы какие-то ресурсы в ОС (CPU, RAM, IO)?
+Зомби не занимают памяти (как процессы-сироты), но блокируют записи в таблице процессов, размер которой ограничен для каждого пользователя и системы в целом.
 
 5. В iovisor BCC есть утилита opensnoop:
 root@vagrant:~# dpkg -L bpfcc-tools | grep sbin/opensnoop
