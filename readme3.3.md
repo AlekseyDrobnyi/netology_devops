@@ -9,8 +9,18 @@ vagrant@netology1:~$ file /dev/sda
 vagrant@netology1:~$ file /bin/bash
 /bin/bash: ELF 64-bit LSB shared object, x86-64
 Используя strace выясните, где находится база данных file на основании которой она делает свои догадки.
+openat(AT_FDCWD, "/usr/share/misc/magic.mgc", O_RDONLY) = 3
 
 3. Предположим, приложение пишет лог в текстовый файл. Этот файл оказался удален (deleted в lsof), однако возможности сигналом сказать приложению переоткрыть файлы или просто перезапустить приложение – нет. Так как приложение продолжает писать в удаленный файл, место на диске постепенно заканчивается. Основываясь на знаниях о перенаправлении потоков предложите способ обнуления открытого удаленного файла (чтобы освободить место на файловой системе).
+vagrant@vagrant:~$ exec 5>log.txt
+vagrant@vagrant:~$ ping localhost >&5
+
+vagrant@vagrant:~$ ps -aux
+vagrant     1448  0.0  0.1   7172  2732 pts/0    S+   02:51   0:00 ping localhost
+vagrant@vagrant:~$ rm log.txt
+vagrant@vagrant:~$ sudo lsof -p 1448 | grep log
+ping    1448 vagrant    5w   REG  253,0    44245 1048609 /home/vagrant/log.txt (deleted)
+vagrant@vagrant:~$ echo "" | sudo tee /proc/1448/fd/5
 
 4. Занимают ли зомби-процессы какие-то ресурсы в ОС (CPU, RAM, IO)?
 
