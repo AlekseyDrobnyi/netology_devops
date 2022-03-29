@@ -29,6 +29,22 @@ vagrant@vagrant:~$ echo "" | sudo tee /proc/1448/fd/5
 root@vagrant:~# dpkg -L bpfcc-tools | grep sbin/opensnoop
 /usr/sbin/opensnoop-bpfcc
 На какие файлы вы увидели вызовы группы open за первую секунду работы утилиты? Воспользуйтесь пакетом bpfcc-tools для Ubuntu 20.04. Дополнительные сведения по установке.
+vagrant@vagrant:~$ sudo apt-get install bpfcc-tools linux-headers-$(uname -r)
+vagrant@vagrant:~$ dpkg -L bpfcc-tools | grep sbin/opensnoop
+/usr/sbin/opensnoop-bpfcc
+установил утилиту, потом запустил
+
+vagrant@vagrant:~$ sudo opensnoop-bpfcc
+PID    COMM               FD ERR PATH
+823    vminfo              6   0 /var/run/utmp
+636    dbus-daemon        -1   2 /usr/local/share/dbus-1/system-services
+636    dbus-daemon        20   0 /usr/share/dbus-1/system-services
+636    dbus-daemon        -1   2 /lib/dbus-1/system-services
+636    dbus-daemon        20   0 /var/lib/snapd/dbus-1/system-services/
+641    irqbalance          6   0 /proc/interrupts
+641    irqbalance          6   0 /proc/stat
+641    irqbalance          6   0 /proc/irq/20/smp_affinity
+641    irqbalance          6   0 /proc/irq/0/smp_affinity
 
 6. Какой системный вызов использует uname -a? Приведите цитату из man по этому системному вызову, где описывается альтернативное местоположение в /proc, где можно узнать версию ядра и релиз ОС.
 
