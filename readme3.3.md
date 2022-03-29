@@ -70,3 +70,139 @@ set -e - Exit immediately if a command exits with a non-zero status.
 такая опция, вероятно, помогает в сценарии, потому что он будет прекращаться при первой же ошибке, кроме последней (o pipefail)
 
 9. Используя -o stat для ps, определите, какой наиболее часто встречающийся статус у процессов в системе. В man ps ознакомьтесь (/PROCESS STATE CODES) что значат дополнительные к основной заглавной буквы статуса процессов. Его можно не учитывать при расчете (считать S, Ss или Ssl равнозначными).
+часто встречающиеся это S(Ss,S,Ssl) и I(I<,I)
+PROCESS STATE CODES
+       Here are the different values that the s, stat and state output specifiers (header "STAT" or "S") will display
+       to describe the state of a process:
+
+               D    uninterruptible sleep (usually IO)
+               I    Idle kernel thread
+               R    running or runnable (on run queue)
+               S    interruptible sleep (waiting for an event to complete)
+               T    stopped by job control signal
+               t    stopped by debugger during the tracing
+               W    paging (not valid since the 2.6.xx kernel)
+               X    dead (should never be seen)
+               Z    defunct ("zombie") process, terminated but not reaped by its parent
+
+       For BSD formats and when the stat keyword is used, additional characters may be displayed:
+
+               <    high-priority (not nice to other users)
+               N    low-priority (nice to other users)
+               L    has pages locked into memory (for real-time and custom IO)
+               s    is a session leader
+               l    is multi-threaded (using CLONE_THREAD, like NPTL pthreads do)
+               +    is in the foreground process group
+               
+STAT
+Ss
+S
+I<
+I<
+I<
+I<
+S
+I
+S
+S
+S
+S
+S
+S
+S
+I<
+S
+I<
+S
+S
+S
+S
+I<
+S
+SN
+SN
+I<
+I<
+I<
+I<
+I<
+I<
+I<
+I<
+S
+S
+S
+I<
+I<
+S
+I<
+S
+I<
+I<
+I<
+I<
+I<
+I<
+S
+I<
+I<
+I<
+I<
+I<
+I<
+I<
+S
+I<
+S<s
+Ss
+I<
+I<
+I<
+I<
+I<
+SLsl
+S<
+S<
+S<
+S<
+S<
+S
+I<
+S<
+Ss
+Ss
+Ssl
+Ss
+Ssl
+Ss
+Ssl
+Ssl
+Ss
+Ssl
+Ss
+Ss+
+Ss
+Ss
+Ssl
+Sl
+Ss
+S
+S
+R
+I
+I
+Ss
+S
+Ss+
+I
+I
+I
+I
+I
+Ss
+S
+Ss
+I
+R+
+
+
