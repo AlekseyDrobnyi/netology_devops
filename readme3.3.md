@@ -47,6 +47,8 @@ PID    COMM               FD ERR PATH
 641    irqbalance          6   0 /proc/irq/0/smp_affinity
 
 6. Какой системный вызов использует uname -a? Приведите цитату из man по этому системному вызову, где описывается альтернативное местоположение в /proc, где можно узнать версию ядра и релиз ОС.
+Part of the utsname information is also accessible via /proc/sys/kernel/{ostype, hostname, osrelease, version,
+       domainname}.
 
 7. Чем отличается последовательность команд через ; и через && в bash? Например:
 root@netology1:~# test -d /tmp/some_dir; echo Hi
