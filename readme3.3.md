@@ -49,6 +49,7 @@ PID    COMM               FD ERR PATH
 6. Какой системный вызов использует uname -a? Приведите цитату из man по этому системному вызову, где описывается альтернативное местоположение в /proc, где можно узнать версию ядра и релиз ОС.
 Part of the utsname information is also accessible via /proc/sys/kernel/{ostype, hostname, osrelease, version,
        domainname}.
+системный вызов uname()
 
 7. Чем отличается последовательность команд через ; и через && в bash? Например:
 root@netology1:~# test -d /tmp/some_dir; echo Hi
@@ -56,7 +57,16 @@ Hi
 root@netology1:~# test -d /tmp/some_dir && echo Hi
 root@netology1:~#
 Есть ли смысл использовать в bash &&, если применить set -e?
+Оператор точка с запятой позволяет запускать несколько команд за один раз, и выполнение команды происходит последовательно.
+Оператор AND (&&) будет выполнять вторую команду только в том случае, если при выполнении первой команды SUCCEEDS, т.е. состояние выхода первой команды равно «0» — программа выполнена успешно. Эта команда очень полезна при проверке состояния выполнения последней команды.
+Использовать && и set -e, нет смысла, как понял, будет двойная проверка на «0»
+set -e - Exit immediately if a command exits with a non-zero status.
 
 8. Из каких опций состоит режим bash set -euxo pipefail и почему его хорошо было бы использовать в сценариях?
+-e  Exit immediately if a command exits with a non-zero status. (выход, если команда завершается с ненулевым статусом.)
+-u  Treat unset variables as an error when substituting. (определяет неустановленные переменные как ошибку)
+-x  Print commands and their arguments as they are executed.(печатать команды и их аргументы по мере их выполнения.)
+- o pipefail  the return value of a pipeline is the status of the last command to exit with a non-zero status, or zero if no command exited with a non-zero 
+такая опция, вероятно, помогает в сценарии, потому что он будет прекращаться при первой же ошибке, кроме последней (o pipefail)
 
 9. Используя -o stat для ps, определите, какой наиболее часто встречающийся статус у процессов в системе. В man ps ознакомьтесь (/PROCESS STATE CODES) что значат дополнительные к основной заглавной буквы статуса процессов. Его можно не учитывать при расчете (считать S, Ss или Ssl равнозначными).
