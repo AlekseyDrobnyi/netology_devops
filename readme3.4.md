@@ -18,7 +18,7 @@ EnvironmentFile=/etc/default/node_exporter
 WantedBy=multi-user.target
 
 vagrant@vagrant:~$ sudo cat /etc/default/node_exporter
-OPRIONS=""
+OPTIONS=""
 
 проверил запуск/перезапуск/рестарт:
 
