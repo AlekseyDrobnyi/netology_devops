@@ -12,8 +12,12 @@ Description=Prometheus Node Exporter
 Documentation=https://github.com/prometheus/node_exporter
 [Service]
 ExecStart=/usr/local/bin/node_exporter
+EnvironmentFile=/etc/default/node_exporter
 [Install]
 WantedBy=multi-user.target
+
+vagrant@vagrant:~$ sudo cat /etc/default/node_exporter
+OPRIONS=""
 
 проверил запуск/перезапуск/рестарт:
 vagrant@vagrant:~$ ps -e | grep node
@@ -35,12 +39,7 @@ vagrant@vagrant:~$ ps -e | grep node
    2107 ?        00:00:00 node_exporter
 vagrant@vagrant:~$ systemctl restart node_exporter
 ==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
-Authentication is required to restart 'node_exporter.service'.
-Authenticating as: vagrant
-Password:
-==== AUTHENTICATION COMPLETE ===
-vagrant@vagrant:~$ ps -e | grep node
-   2137 ?        00:00:00 node_exporter
+
 
 2. Ознакомьтесь с опциями node_exporter и выводом /metrics по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
 
