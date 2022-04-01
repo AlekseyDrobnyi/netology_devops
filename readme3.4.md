@@ -46,6 +46,8 @@ vagrant@vagrant:~$ systemctl restart node_exporter
 2. Ознакомьтесь с опциями node_exporter и выводом /metrics по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
 
 3. Установите в свою виртуальную машину Netdata. Воспользуйтесь готовыми пакетами для установки (sudo apt install -y netdata). После успешной установки:
+![image](https://user-images.githubusercontent.com/99823951/161235048-f8be5646-ba98-4538-b696-43cbc2db9c49.png)
+
 
 в конфигурационном файле /etc/netdata/netdata.conf в секции [web] замените значение с localhost на bind to = 0.0.0.0,
 добавьте в Vagrantfile проброс порта Netdata на свой локальный компьютер и сделайте vagrant reload:
