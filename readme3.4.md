@@ -4,6 +4,42 @@
 поместите его в автозагрузку,
 предусмотрите возможность добавления опций к запускаемому процессу через внешний файл (посмотрите, например, на systemctl cat cron),
 удостоверьтесь, что с помощью systemctl процесс корректно стартует, завершается, а после перезагрузки автоматически поднимается.
+файл создал:
+vagrant@vagrant:~$ sudo cat /usr/lib/systemd/system/node_exporter.service
+[Unit]
+Description=Prometheus Node Exporter
+Documentation=https://github.com/prometheus/node_exporter
+[Service]
+ExecStart=/usr/local/bin/node_exporter
+[Install]
+WantedBy=multi-user.target
+
+проверил запуск/перезапуск/рестарт:
+vagrant@vagrant:~$ ps -e | grep node
+   1969 ?        00:00:00 node_exporter
+vagrant@vagrant:~$ systemctl stop node_exporter
+==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
+Authentication is required to stop 'node_exporter.service'.
+Authenticating as: vagrant
+Password:
+==== AUTHENTICATION COMPLETE ===
+vagrant@vagrant:~$ ps -e | grep node
+vagrant@vagrant:~$ systemctl start node_exporter
+==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
+Authentication is required to start 'node_exporter.service'.
+Authenticating as: vagrant
+Password:
+==== AUTHENTICATION COMPLETE ===
+vagrant@vagrant:~$ ps -e | grep node
+   2107 ?        00:00:00 node_exporter
+vagrant@vagrant:~$ systemctl restart node_exporter
+==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
+Authentication is required to restart 'node_exporter.service'.
+Authenticating as: vagrant
+Password:
+==== AUTHENTICATION COMPLETE ===
+vagrant@vagrant:~$ ps -e | grep node
+   2137 ?        00:00:00 node_exporter
 
 2. Ознакомьтесь с опциями node_exporter и выводом /metrics по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
 
