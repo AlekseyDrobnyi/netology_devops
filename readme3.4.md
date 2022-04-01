@@ -6,6 +6,7 @@
 удостоверьтесь, что с помощью systemctl процесс корректно стартует, завершается, а после перезагрузки автоматически поднимается.
 
 файл создал:
+
 vagrant@vagrant:~$ sudo cat /usr/lib/systemd/system/node_exporter.service
 [Unit]
 Description=Prometheus Node Exporter
@@ -20,6 +21,7 @@ vagrant@vagrant:~$ sudo cat /etc/default/node_exporter
 OPRIONS=""
 
 проверил запуск/перезапуск/рестарт:
+
 vagrant@vagrant:~$ ps -e | grep node
    1969 ?        00:00:00 node_exporter
 vagrant@vagrant:~$ systemctl stop node_exporter
