@@ -44,7 +44,8 @@ vagrant@vagrant:~$ systemctl restart node_exporter
 
 
 2. Ознакомьтесь с опциями node_exporter и выводом /metrics по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
-curl http://localhost:9100/metrics
+
+запустил и ознакомился с метриками - curl http://localhost:9100/metrics
 
 для CPU: 
 node_cpu_seconds_total{cpu="0",mode="system"} 9.66
