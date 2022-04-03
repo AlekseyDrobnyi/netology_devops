@@ -44,6 +44,29 @@ vagrant@vagrant:~$ systemctl restart node_exporter
 
 
 2. Ознакомьтесь с опциями node_exporter и выводом /metrics по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
+curl http://localhost:9100/metrics
+
+для CPU: 
+node_cpu_seconds_total{cpu="0",mode="system"} 9.66
+node_cpu_seconds_total{cpu="0",mode="user"} 5.75
+node_cpu_seconds_total{cpu="1",mode="idle"} 1555.77
+
+memory:
+node_memory_MemTotal_bytes Memory information field MemTotal_bytes.
+node_memory_MemFree_bytes Memory information field MemFree_bytes.
+
+disk:
+node_disk_write_time_seconds_total This is the total number of seconds spent by all writes.
+node_disk_read_time_seconds_total The total number of seconds spent by all reads.
+node_disk_read_bytes_total The total number of bytes read successfully.
+node_disk_io_time_seconds_total Total seconds spent doing I/Os.
+
+network:
+node_network_transmit_errs_total Network device statistic transmit_errs.
+node_network_transmit_bytes_total Network device statistic transmit_bytes.
+node_network_receive_errs_total Network device statistic receive_errs.
+node_network_receive_bytes_total Network device statistic receive_bytes.
+
 
 3. Установите в свою виртуальную машину Netdata. Воспользуйтесь готовыми пакетами для установки (sudo apt install -y netdata). После успешной установки:
 ![image](https://user-images.githubusercontent.com/99823951/161235048-f8be5646-ba98-4538-b696-43cbc2db9c49.png)
