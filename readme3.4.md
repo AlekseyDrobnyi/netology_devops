@@ -43,10 +43,14 @@ vagrant@vagrant:~$ systemctl restart node_exporter
 ==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
 
 
+
+
+
+
 Задание 1
 Предлагаю уточнить как именно в службу будут передаваться дополнительные опции. 
 
-в разделе [Service] я в файле readme не указал параметр, на который ссылаться будет служба при запуске. 
+в разделе [Service] я в файле readme не указал переменную, на которую ссылаться будет служба при запуске. 
 ExecStart=/usr/local/bin/node_exporter  $OPTIONS
 EnvironmentFile=/etc/default/node_exporter - а тут разместил сам файл с опциями.
 
@@ -63,6 +67,13 @@ vagrant@vagrant:~$ systemctl status node_exporter.service
      Memory: 2.3M
      CGroup: /system.slice/node_exporter.service
              └─2190 /usr/local/bin/node_exporter --collector.cpu.guest --collector.cpu.info
+
+
+
+
+
+
+
 
 
 2. Ознакомьтесь с опциями node_exporter и выводом /metrics по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
