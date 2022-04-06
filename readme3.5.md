@@ -269,6 +269,7 @@ root@vagrant:~# vgcreate vg01 /dev/md0 /dev/md1
 
 root@vagrant:~# lvcreate -L 100 vg01 /dev/md1
   Logical volume "lvol0" created.
+ 
 root@vagrant:~# lvs
   LV        VG        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
   ubuntu-lv ubuntu-vg -wi-ao----  31.50g
