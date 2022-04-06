@@ -277,15 +277,82 @@ root@vagrant:~# mount /dev/vg01/lvol0 /tmp/new
 
 13. Поместите туда тестовый файл, например wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz.
 
+root@vagrant:~# wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz
+--2022-04-06 04:26:08--  https://mirror.yandex.ru/ubuntu/ls-lR.gz
+Resolving mirror.yandex.ru (mirror.yandex.ru)... 213.180.204.183, 2a02:6b8::183
+Connecting to mirror.yandex.ru (mirror.yandex.ru)|213.180.204.183|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 22383592 (21M) [application/octet-stream]
+Saving to: ‘/tmp/new/test.gz’
+
+/tmp/new/test.gz              100%[=================================================>]  21.35M  10.2MB/s    in 2.1s
+
+2022-04-06 04:26:10 (10.2 MB/s) - ‘/tmp/new/test.gz’ saved [22383592/22383592]
+
+root@vagrant:~# ls -l /tmp/new
+total 21876
+drwx------ 2 root root    16384 Apr  6 04:04 lost+found
+-rw-r--r-- 1 root root 22383592 Apr  6 03:58 test.gz
+
 14. Прикрепите вывод lsblk.
 
+root@vagrant:~# lsblk
+NAME                      MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+loop0                       7:0    0 55.4M  1 loop  /snap/core18/2128
+loop2                       7:2    0 70.3M  1 loop  /snap/lxd/21029
+loop3                       7:3    0 55.5M  1 loop  /snap/core18/2344
+loop4                       7:4    0 44.7M  1 loop  /snap/snapd/15314
+loop5                       7:5    0 61.9M  1 loop  /snap/core20/1405
+loop6                       7:6    0 67.8M  1 loop  /snap/lxd/22753
+sda                         8:0    0   64G  0 disk
+├─sda1                      8:1    0    1M  0 part
+├─sda2                      8:2    0    1G  0 part  /boot
+└─sda3                      8:3    0   63G  0 part
+  └─ubuntu--vg-ubuntu--lv 253:0    0 31.5G  0 lvm   /
+sdb                         8:16   0  2.5G  0 disk
+├─sdb1                      8:17   0    2G  0 part
+│ └─md0                     9:0    0    2G  0 raid1
+└─sdb2                      8:18   0  511M  0 part
+  └─md1                     9:1    0 1018M  0 raid0
+    └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new
+sdc                         8:32   0  2.5G  0 disk
+├─sdc1                      8:33   0    2G  0 part
+│ └─md0                     9:0    0    2G  0 raid1
+└─sdc2                      8:34   0  511M  0 part
+  └─md1                     9:1    0 1018M  0 raid0
+    └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new
+
 15. Протестируйте целостность файла:
+
+проверил:
 
 root@vagrant:~# gzip -t /tmp/new/test.gz
 root@vagrant:~# echo $?
 0
 
 16. Используя pvmove, переместите содержимое PV с RAID0 на RAID1.
+
+root@vagrant:~# pvmove /dev/md1
+  /dev/md1: Moved: 12.00%
+  /dev/md1: Moved: 100.00%
+  
+root@vagrant:~# lsblk
+NAME                      MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+....
+└─sda3                      8:3    0   63G  0 part
+  └─ubuntu--vg-ubuntu--lv 253:0    0 31.5G  0 lvm   /
+sdb                         8:16   0  2.5G  0 disk
+├─sdb1                      8:17   0    2G  0 part
+│ └─md0                     9:0    0    2G  0 raid1
+│   └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new
+└─sdb2                      8:18   0  511M  0 part
+  └─md1                     9:1    0 1018M  0 raid0
+sdc                         8:32   0  2.5G  0 disk
+├─sdc1                      8:33   0    2G  0 part
+│ └─md0                     9:0    0    2G  0 raid1
+│   └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new
+└─sdc2                      8:34   0  511M  0 part
+  └─md1                     9:1    0 1018M  0 raid0
 
 17. Сделайте --fail на устройство в вашем RAID1 md.
 
