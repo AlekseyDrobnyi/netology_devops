@@ -142,15 +142,138 @@ sdc                         8:32   0  2.5G  0 disk
 
 7. Соберите mdadm RAID0 на второй паре маленьких разделов.
 
+почему-то при создании raid0 не было опроса Y/N на подтверждение. Сразу произошло создание.
+
+root@vagrant:~# mdadm --create --verbose /dev/md1 -l 0 -n 2 /dev/sd{b2,c2}
+mdadm: chunk size defaults to 512K
+mdadm: Defaulting to version 1.2 metadata
+mdadm: array /dev/md1 started.
+
+sdb                         8:16   0  2.5G  0 disk
+├─sdb1                      8:17   0    2G  0 part
+│ └─md0                     9:0    0    2G  0 raid1
+└─sdb2                      8:18   0  511M  0 part
+  └─md1                     9:1    0 1018M  0 raid0
+sdc                         8:32   0  2.5G  0 disk
+├─sdc1                      8:33   0    2G  0 part
+│ └─md0                     9:0    0    2G  0 raid1
+└─sdc2                      8:34   0  511M  0 part
+  └─md1                     9:1    0 1018M  0 raid0
+
 8. Создайте 2 независимых PV на получившихся md-устройствах.
+
+root@vagrant:~# pvcreate /dev/md0 /dev/md1
+  Physical volume "/dev/md0" successfully created.
+  Physical volume "/dev/md1" successfully created.
+  
+  root@vagrant:~# pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/sda3
+  VG Name               ubuntu-vg
+  PV Size               <63.00 GiB / not usable 0
+  Allocatable           yes
+  PE Size               4.00 MiB
+  Total PE              16127
+  Free PE               8063
+  Allocated PE          8064
+  PV UUID               sDUvKe-EtCc-gKuY-ZXTD-1B1d-eh9Q-XldxLf
+
+  --- Physical volume ---
+  PV Name               /dev/md0
+  VG Name               vg01
+  PV Size               <2.00 GiB / not usable 0
+  Allocatable           yes
+  PE Size               4.00 MiB
+  Total PE              511
+  Free PE               511
+  Allocated PE          0
+  PV UUID               vUlumX-S2aO-TH3u-6Bue-3Pu2-Pu9G-FRAdUQ
+
+  --- Physical volume ---
+  PV Name               /dev/md1
+  VG Name               vg01
+  PV Size               1018.00 MiB / not usable 2.00 MiB
+  Allocatable           yes
+  PE Size               4.00 MiB
+  Total PE              254
+  Free PE               254
+  Allocated PE          0
+  PV UUID               HRuXG4-wjcD-d04Y-7zzo-rUu9-H6OA-X3cQcH
 
 9. Создайте общую volume-group на этих двух PV.
 
+root@vagrant:~# vgcreate vg01 /dev/md0 /dev/md1
+  Volume group "vg01" successfully created
+  
+ root@vagrant:~# vgdisplay
+  --- Volume group ---
+  VG Name               ubuntu-vg
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  2
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                1
+  Open LV               1
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               <63.00 GiB
+  PE Size               4.00 MiB
+  Total PE              16127
+  Alloc PE / Size       8064 / 31.50 GiB
+  Free  PE / Size       8063 / <31.50 GiB
+  VG UUID               aK7Bd1-JPle-i0h7-5jJa-M60v-WwMk-PFByJ7
+
+  --- Volume group ---
+  VG Name               vg01
+  System ID
+  Format                lvm2
+  Metadata Areas        2
+  Metadata Sequence No  1
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                0
+  Open LV               0
+  Max PV                0
+  Cur PV                2
+  Act PV                2
+  VG Size               <2.99 GiB
+  PE Size               4.00 MiB
+  Total PE              765
+  Alloc PE / Size       0 / 0
+  Free  PE / Size       765 / <2.99 GiB
+  VG UUID               kVU9JD-GEix-2IL5-ivt8-Gl6j-vnQJ-HaZe4I
+  
+
 10. Создайте LV размером 100 Мб, указав его расположение на PV с RAID0.
+
+root@vagrant:~# lvcreate -L 100 vg01 /dev/md1
+  Logical volume "lvol0" created.
+root@vagrant:~# lvs
+  LV        VG        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  ubuntu-lv ubuntu-vg -wi-ao----  31.50g
+  lvol0     vg01      -wi-a----- 100.00m
 
 11. Создайте mkfs.ext4 ФС на получившемся LV.
 
+root@vagrant:~# mkfs.ext4 /dev/vg01/lvol0
+mke2fs 1.45.5 (07-Jan-2020)
+Creating filesystem with 25600 4k blocks and 25600 inodes
+
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (1024 blocks): done
+Writing superblocks and filesystem accounting information: done
+
+
 12. Смонтируйте этот раздел в любую директорию, например, /tmp/new.
+
+root@vagrant:~# mkdir /tmp/new
+root@vagrant:~# mount /dev/vg01/lvol0 /tmp/new
 
 13. Поместите туда тестовый файл, например wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz.
 
