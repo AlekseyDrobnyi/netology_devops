@@ -7,12 +7,14 @@
 Жесткая ссылка и файл, для которой она создавалась имеют одинаковые inode. Поэтому жесткая ссылка имеет те же права доступа, владельца и время последней модификации, что и целевой файл. 
 
 vagrant@vagrant:~$ ln text.txt tesl_link
+
 vagrant@vagrant:~$ ls -ilh
 total 0
 1048605 -rw-rw-r-- 2 vagrant vagrant 0 Apr  6 04:55 tesl_link
 1048605 -rw-rw-r-- 2 vagrant vagrant 0 Apr  6 04:55 text.txt
 
 vagrant@vagrant:~$ chmod 0000 text.txt
+
 vagrant@vagrant:~$ ls -ilh
 total 0
 1048605 ---------- 2 vagrant vagrant 0 Apr  6 04:55 tesl_link
@@ -70,6 +72,7 @@ Device     Boot   Start     End Sectors  Size Id Type
 5. Используя sfdisk, перенесите данную таблицу разделов на второй диск.
 
 vagrant@vagrant:~$ sudo -i
+
 root@vagrant:~# sfdisk -d /dev/sdb | sfdisk --force /dev/sdc
 Checking that no-one is using this disk right now ... OK
 
@@ -286,6 +289,7 @@ Writing superblocks and filesystem accounting information: done
 12. Смонтируйте этот раздел в любую директорию, например, /tmp/new.
 
 root@vagrant:~# mkdir /tmp/new
+
 root@vagrant:~# mount /dev/vg01/lvol0 /tmp/new
 
 13. Поместите туда тестовый файл, например wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz.
@@ -340,6 +344,7 @@ sdc                         8:32   0  2.5G  0 disk
 проверил:
 
 root@vagrant:~# gzip -t /tmp/new/test.gz
+
 root@vagrant:~# echo $?
 0
 
