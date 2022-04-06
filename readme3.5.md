@@ -38,7 +38,7 @@ sdb                         8:16   0  2.5G  0 disk
 sdc                         8:32   0  2.5G  0 disk
 
 4. Используя fdisk, разбейте первый диск на 2 раздела: 2 Гб, оставшееся пространство.
-разбил раздел:
+разбил раздел, пользовался ключами m(помощь), p(посмотреть разделы), n(создать раздел), w(сохранить и выйти):
 
 vagrant@vagrant:~$ sudo fdisk -l /dev/sdb
 Disk /dev/sdb: 2.51 GiB, 2684354560 bytes, 5242880 sectors
@@ -118,8 +118,27 @@ Device     Boot   Start     End Sectors  Size Id Type
 
 6. Соберите mdadm RAID1 на паре разделов 2 Гб.
 
+root@vagrant:~# mdadm --create --verbose /dev/md0 -l1 -n 2 /dev/sd{b1,c1}
+mdadm: Note: this array has metadata at the start and
+    may not be suitable as a boot device.  If you plan to
+    store '/boot' on this device please ensure that
+    your boot-loader understands md/v1.x metadata, or use
+    --metadata=0.90
+mdadm: size set to 2094080K
+Continue creating array? y
+mdadm: Defaulting to version 1.2 metadata
+mdadm: array /dev/md0 started.
 
+проверяем  lsblk:
 
+sdb                         8:16   0  2.5G  0 disk
+├─sdb1                      8:17   0    2G  0 part
+│ └─md0                     9:0    0    2G  0 raid1
+└─sdb2                      8:18   0  511M  0 part
+sdc                         8:32   0  2.5G  0 disk
+├─sdc1                      8:33   0    2G  0 part
+│ └─md0                     9:0    0    2G  0 raid1
+└─sdc2                      8:34   0  511M  0 part
 
 7. Соберите mdadm RAID0 на второй паре маленьких разделов.
 
