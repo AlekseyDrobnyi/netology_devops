@@ -4,6 +4,19 @@
 
 2. Могут ли файлы, являющиеся жесткой ссылкой на один объект, иметь разные права доступа и владельца? Почему?
 
+Жесткая ссылка и файл, для которой она создавалась имеют одинаковые inode. Поэтому жесткая ссылка имеет те же права доступа, владельца и время последней модификации, что и целевой файл. 
+
+vagrant@vagrant:~$ ln text.txt tesl_link
+vagrant@vagrant:~$ ls -ilh
+total 0
+1048605 -rw-rw-r-- 2 vagrant vagrant 0 Apr  6 04:55 tesl_link
+1048605 -rw-rw-r-- 2 vagrant vagrant 0 Apr  6 04:55 text.txt
+
+vagrant@vagrant:~$ chmod 0000 text.txt
+vagrant@vagrant:~$ ls -ilh
+total 0
+1048605 ---------- 2 vagrant vagrant 0 Apr  6 04:55 tesl_link
+1048605 ---------- 2 vagrant vagrant 0 Apr  6 04:55 text.txt
 
 3. Сделайте vagrant destroy на имеющийся инстанс Ubuntu. Замените содержимое Vagrantfile следующим:
 
