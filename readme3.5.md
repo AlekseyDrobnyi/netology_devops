@@ -356,11 +356,60 @@ sdc                         8:32   0  2.5G  0 disk
 
 17. Сделайте --fail на устройство в вашем RAID1 md.
 
+root@vagrant:~# mdadm /dev/md0 --fail /dev/sdb1
+mdadm: set /dev/sdb1 faulty in /dev/md0
+
+
+root@vagrant:~# mdadm -D /dev/md0
+/dev/md0:
+           Version : 1.2
+     Creation Time : Wed Apr  6 03:28:11 2022
+        Raid Level : raid1
+        Array Size : 2094080 (2045.00 MiB 2144.34 MB)
+     Used Dev Size : 2094080 (2045.00 MiB 2144.34 MB)
+      Raid Devices : 2
+     Total Devices : 2
+       Persistence : Superblock is persistent
+
+       Update Time : Wed Apr  6 04:41:56 2022
+             State : clean, degraded
+    Active Devices : 1
+   Working Devices : 1
+    Failed Devices : 1
+     Spare Devices : 0
+
+Consistency Policy : resync
+
+              Name : vagrant:0  (local to host vagrant)
+              UUID : e4bad6a6:37093efd:7e54f9a1:435d95ce
+            Events : 19
+
+    Number   Major   Minor   RaidDevice State
+       -       0        0        0      removed
+       1       8       33        1      active sync   /dev/sdc1
+
+       0       8       17        -      faulty   /dev/sdb1
+
 18. Подтвердите выводом dmesg, что RAID1 работает в деградированном состоянии.
+
+root@vagrant:~# dmesg | grep md0
+[ 4329.174431] md/raid1:md0: not clean -- starting background reconstruction
+[ 4329.174432] md/raid1:md0: active with 2 out of 2 mirrors
+[ 4329.174443] md0: detected capacity change from 0 to 2144337920
+[ 4329.176019] md: resync of RAID array md0
+[ 4339.859419] md: md0: resync done.
+[ 8753.390042] md/raid1:md0: Disk failure on sdb1, disabling device.
+               md/raid1:md0: Operation continuing on 1 devices.
 
 19. Протестируйте целостность файла, несмотря на "сбойный" диск он должен продолжать быть доступен:
 
-root@vagrant:~# gzip -t /tmp/new/test.gz
-root@vagrant:~# echo $?
+Проверил: root@vagrant:~# gzip -t /tmp/new/test.gz && echo $?
 0
+
 20. Погасите тестовый хост, vagrant destroy.
+
+Алексей@DESKTOP-8UA2JLC MINGW64 ~/desktop/devops/systemadm (master)
+$ vagrant destroy
+    default: Are you sure you want to destroy the 'default' VM? [y/N] y
+==> default: Forcing shutdown of VM...
+==> default: Destroying VM and associated drives...
