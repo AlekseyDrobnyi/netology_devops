@@ -242,74 +242,74 @@ root@vagrant:~# vgcreate vg01 /dev/md0 /dev/md1
   Free  PE / Size       8063 / <31.50 GiB  
   VG UUID               aK7Bd1-JPle-i0h7-5jJa-M60v-WwMk-PFByJ7  
 
-  --- Volume group ---
-  VG Name               vg01
-  System ID
-  Format                lvm2
-  Metadata Areas        2
-  Metadata Sequence No  1
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                0
-  Cur LV                0
-  Open LV               0
-  Max PV                0
-  Cur PV                2
-  Act PV                2
-  VG Size               <2.99 GiB
-  PE Size               4.00 MiB
-  Total PE              765
-  Alloc PE / Size       0 / 0
-  Free  PE / Size       765 / <2.99 GiB
-  VG UUID               kVU9JD-GEix-2IL5-ivt8-Gl6j-vnQJ-HaZe4I
+  --- Volume group ---  
+  VG Name               vg01  
+  System ID  
+  Format                lvm2  
+  Metadata Areas        2  
+  Metadata Sequence No  1  
+  VG Access             read/write  
+  VG Status             resizable  
+  MAX LV                0  
+  Cur LV                0  
+  Open LV               0  
+  Max PV                0  
+  Cur PV                2  
+  Act PV                2  
+  VG Size               <2.99 GiB  
+  PE Size               4.00 MiB  
+  Total PE              765  
+  Alloc PE / Size       0 / 0  
+  Free  PE / Size       765 / <2.99 GiB  
+  VG UUID               kVU9JD-GEix-2IL5-ivt8-Gl6j-vnQJ-HaZe4I  
   
 
 10. Создайте LV размером 100 Мб, указав его расположение на PV с RAID0.  
 
-root@vagrant:~# lvcreate -L 100 vg01 /dev/md1
-  Logical volume "lvol0" created.
+root@vagrant:~# lvcreate -L 100 vg01 /dev/md1  
+  Logical volume "lvol0" created.  
  
-root@vagrant:~# lvs
-  LV        VG        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
-  ubuntu-lv ubuntu-vg -wi-ao----  31.50g
-  lvol0     vg01      -wi-a----- 100.00m
+root@vagrant:~# lvs  
+  LV        VG        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert  
+  ubuntu-lv ubuntu-vg -wi-ao----  31.50g  
+  lvol0     vg01      -wi-a----- 100.00m  
 
-11. Создайте mkfs.ext4 ФС на получившемся LV.
+11. Создайте mkfs.ext4 ФС на получившемся LV.  
 
-root@vagrant:~# mkfs.ext4 /dev/vg01/lvol0
-mke2fs 1.45.5 (07-Jan-2020)
-Creating filesystem with 25600 4k blocks and 25600 inodes
+root@vagrant:~# mkfs.ext4 /dev/vg01/lvol0  
+mke2fs 1.45.5 (07-Jan-2020)  
+Creating filesystem with 25600 4k blocks and 25600 inodes  
 
-Allocating group tables: done
-Writing inode tables: done
-Creating journal (1024 blocks): done
-Writing superblocks and filesystem accounting information: done
+Allocating group tables: done  
+Writing inode tables: done  
+Creating journal (1024 blocks): done  
+Writing superblocks and filesystem accounting information: done  
 
 
-12. Смонтируйте этот раздел в любую директорию, например, /tmp/new.
+12. Смонтируйте этот раздел в любую директорию, например, /tmp/new.  
 
-root@vagrant:~# mkdir /tmp/new
+root@vagrant:~# mkdir /tmp/new  
 
-root@vagrant:~# mount /dev/vg01/lvol0 /tmp/new
+root@vagrant:~# mount /dev/vg01/lvol0 /tmp/new  
 
-13. Поместите туда тестовый файл, например wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz.
+13. Поместите туда тестовый файл, например wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz.  
 
-root@vagrant:~# wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz
---2022-04-06 04:26:08--  https://mirror.yandex.ru/ubuntu/ls-lR.gz
-Resolving mirror.yandex.ru (mirror.yandex.ru)... 213.180.204.183, 2a02:6b8::183
-Connecting to mirror.yandex.ru (mirror.yandex.ru)|213.180.204.183|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 22383592 (21M) [application/octet-stream]
-Saving to: ‘/tmp/new/test.gz’
+root@vagrant:~# wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz  
+--2022-04-06 04:26:08--  https://mirror.yandex.ru/ubuntu/ls-lR.gz  
+Resolving mirror.yandex.ru (mirror.yandex.ru)... 213.180.204.183, 2a02:6b8::183  
+Connecting to mirror.yandex.ru (mirror.yandex.ru)|213.180.204.183|:443... connected.  
+HTTP request sent, awaiting response... 200 OK  
+Length: 22383592 (21M) [application/octet-stream]  
+Saving to: ‘/tmp/new/test.gz’  
 
-/tmp/new/test.gz              100%[=================================================>]  21.35M  10.2MB/s    in 2.1s
+/tmp/new/test.gz              100%[=================================================>]  21.35M  10.2MB/s    in 2.1s  
 
-2022-04-06 04:26:10 (10.2 MB/s) - ‘/tmp/new/test.gz’ saved [22383592/22383592]
+2022-04-06 04:26:10 (10.2 MB/s) - ‘/tmp/new/test.gz’ saved [22383592/22383592]  
 
-root@vagrant:~# ls -l /tmp/new
-total 21876
-drwx------ 2 root root    16384 Apr  6 04:04 lost+found
--rw-r--r-- 1 root root 22383592 Apr  6 03:58 test.gz
+root@vagrant:~# ls -l /tmp/new  
+total 21876  
+drwx------ 2 root root    16384 Apr  6 04:04 lost+found  
+-rw-r--r-- 1 root root 22383592 Apr  6 03:58 test.gz  
 
 
 
@@ -344,95 +344,91 @@ sdb                         8:16   0  2.5G  0 disk
    └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new  
 
 
-15. Протестируйте целостность файла:
+15. Протестируйте целостность файла:  
+проверил:  
 
-проверил:
+root@vagrant:~# gzip -t /tmp/new/test.gz  
 
-root@vagrant:~# gzip -t /tmp/new/test.gz
+root@vagrant:~# echo $?  
+0  
 
-root@vagrant:~# echo $?
-0
+16. Используя pvmove, переместите содержимое PV с RAID0 на RAID1.  
 
-16. Используя pvmove, переместите содержимое PV с RAID0 на RAID1.
-
-root@vagrant:~# pvmove /dev/md1
-  /dev/md1: Moved: 12.00%
-  /dev/md1: Moved: 100.00%
+root@vagrant:~# pvmove /dev/md1  
+  /dev/md1: Moved: 12.00%  
+  /dev/md1: Moved: 100.00%  
   
-root@vagrant:~# lsblk
-NAME                      MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
-....
-└─sda3                      8:3    0   63G  0 part
-  └─ubuntu--vg-ubuntu--lv 253:0    0 31.5G  0 lvm   /
-sdb                         8:16   0  2.5G  0 disk
-├─sdb1                      8:17   0    2G  0 part
-│ └─md0                     9:0    0    2G  0 raid1
-│   └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new
-└─sdb2                      8:18   0  511M  0 part
-  └─md1                     9:1    0 1018M  0 raid0
-sdc                         8:32   0  2.5G  0 disk
-├─sdc1                      8:33   0    2G  0 part
-│ └─md0                     9:0    0    2G  0 raid1
-│   └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new
-└─sdc2                      8:34   0  511M  0 part
-  └─md1                     9:1    0 1018M  0 raid0
+root@vagrant:~# lsblk  
+NAME                      MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT  
+....  
+└─sda3                      8:3    0   63G  0 part  
+  └─ubuntu--vg-ubuntu--lv 253:0    0 31.5G  0 lvm   /  
+sdb                         8:16   0  2.5G  0 disk  
+├─sdb1                      8:17   0    2G  0 part  
+│ └─md0                     9:0    0    2G  0 raid1  
+│   └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new  
+└─sdb2                      8:18   0  511M  0 part  
+  └─md1                     9:1    0 1018M  0 raid0  
+sdc                         8:32   0  2.5G  0 disk  
+├─sdc1                      8:33   0    2G  0 part  
+│ └─md0                     9:0    0    2G  0 raid1  
+│   └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new  
+└─sdc2                      8:34   0  511M  0 part  
+  └─md1                     9:1    0 1018M  0 raid0  
 
-17. Сделайте --fail на устройство в вашем RAID1 md.
+17. Сделайте --fail на устройство в вашем RAID1 md.  
 
-root@vagrant:~# mdadm /dev/md0 --fail /dev/sdb1
-mdadm: set /dev/sdb1 faulty in /dev/md0
+root@vagrant:~# mdadm /dev/md0 --fail /dev/sdb1  
+mdadm: set /dev/sdb1 faulty in /dev/md0  
 
 
-root@vagrant:~# mdadm -D /dev/md0
-/dev/md0:
-           Version : 1.2
-     Creation Time : Wed Apr  6 03:28:11 2022
-        Raid Level : raid1
-        Array Size : 2094080 (2045.00 MiB 2144.34 MB)
-     Used Dev Size : 2094080 (2045.00 MiB 2144.34 MB)
-      Raid Devices : 2
-     Total Devices : 2
-       Persistence : Superblock is persistent
+root@vagrant:~# mdadm -D /dev/md0  
+/dev/md0:  
+           Version : 1.2  
+     Creation Time : Wed Apr  6 03:28:11 2022  
+        Raid Level : raid1  
+        Array Size : 2094080 (2045.00 MiB 2144.34 MB)  
+     Used Dev Size : 2094080 (2045.00 MiB 2144.34 MB)  
+      Raid Devices : 2  
+     Total Devices : 2  
+       Persistence : Superblock is persistent  
 
-       Update Time : Wed Apr  6 04:41:56 2022
-             State : clean, degraded
-    Active Devices : 1
-   Working Devices : 1
-    Failed Devices : 1
-     Spare Devices : 0
+   Update Time : Wed Apr  6 04:41:56 2022  
+            State : clean, degraded  
+   Active Devices : 1  
+   Working Devices : 1  
+    Failed Devices : 1  
+     Spare Devices : 0  
 
-Consistency Policy : resync
+Consistency Policy : resync  
+    Name : vagrant:0  (local to host vagrant)  
+             UUID : e4bad6a6:37093efd:7e54f9a1:435d95ce  
+            Events : 19  
+    Number   Major   Minor   RaidDevice State  
+       -       0        0        0      removed  
+       1       8       33        1      active sync   /dev/sdc1  
+       0       8       17        -      faulty   /dev/sdb1  
 
-              Name : vagrant:0  (local to host vagrant)
-              UUID : e4bad6a6:37093efd:7e54f9a1:435d95ce
-            Events : 19
+18. Подтвердите выводом dmesg, что RAID1 работает в деградированном состоянии.  
 
-    Number   Major   Minor   RaidDevice State
-       -       0        0        0      removed
-       1       8       33        1      active sync   /dev/sdc1
+root@vagrant:~# dmesg | grep md0  
+[ 4329.174431] md/raid1:md0: not clean -- starting background reconstruction  
+[ 4329.174432] md/raid1:md0: active with 2 out of 2 mirrors  
+[ 4329.174443] md0: detected capacity change from 0 to 2144337920  
+[ 4329.176019] md: resync of RAID array md0  
+[ 4339.859419] md: md0: resync done.  
+[ 8753.390042] md/raid1:md0: Disk failure on sdb1, disabling device.  
+               md/raid1:md0: Operation continuing on 1 devices.  
 
-       0       8       17        -      faulty   /dev/sdb1
+19. Протестируйте целостность файла, несмотря на "сбойный" диск он должен продолжать быть доступен:  
 
-18. Подтвердите выводом dmesg, что RAID1 работает в деградированном состоянии.
+Проверил: root@vagrant:~# gzip -t /tmp/new/test.gz && echo $?  
+0  
 
-root@vagrant:~# dmesg | grep md0
-[ 4329.174431] md/raid1:md0: not clean -- starting background reconstruction
-[ 4329.174432] md/raid1:md0: active with 2 out of 2 mirrors
-[ 4329.174443] md0: detected capacity change from 0 to 2144337920
-[ 4329.176019] md: resync of RAID array md0
-[ 4339.859419] md: md0: resync done.
-[ 8753.390042] md/raid1:md0: Disk failure on sdb1, disabling device.
-               md/raid1:md0: Operation continuing on 1 devices.
+20. Погасите тестовый хост, vagrant destroy.  
 
-19. Протестируйте целостность файла, несмотря на "сбойный" диск он должен продолжать быть доступен:
-
-Проверил: root@vagrant:~# gzip -t /tmp/new/test.gz && echo $?
-0
-
-20. Погасите тестовый хост, vagrant destroy.
-
-Алексей@DESKTOP-8UA2JLC MINGW64 ~/desktop/devops/systemadm (master)
-$ vagrant destroy
-    default: Are you sure you want to destroy the 'default' VM? [y/N] y
-==> default: Forcing shutdown of VM...
-==> default: Destroying VM and associated drives...
+Алексей@DESKTOP-8UA2JLC MINGW64 ~/desktop/devops/systemadm (master)  
+$ vagrant destroy  
+    default: Are you sure you want to destroy the 'default' VM? [y/N] y  
+==> default: Forcing shutdown of VM...  
+==> default: Destroying VM and associated drives...  
