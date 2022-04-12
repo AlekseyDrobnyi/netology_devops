@@ -312,6 +312,10 @@ total 21876
 drwx------ 2 root root    16384 Apr  6 04:04 lost+found
 -rw-r--r-- 1 root root 22383592 Apr  6 03:58 test.gz
 
+
+
+
+
 14. Прикрепите вывод lsblk.
 
 root@vagrant:~# lsblk
@@ -348,9 +352,9 @@ sdb                         8:16   0  2.5G  0 disk
 
   └─md1                     9:1    0 1018M  0 raid0
   
-    └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new
+   └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new
     
-    sdc                         8:32   0  2.5G  0 disk
+   sdc                         8:32   0  2.5G  0 disk
     
 ├─sdc1                      8:33   0    2G  0 part
 
@@ -360,7 +364,13 @@ sdb                         8:16   0  2.5G  0 disk
 
   └─md1                     9:1    0 1018M  0 raid0
   
-    └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new
+   └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new
+
+
+
+
+
+
 
 15. Протестируйте целостность файла:
 
