@@ -36,6 +36,9 @@ Set-Cookie: prov=b7b140f7-cd2b-0fb3-273a-a6d4894587d2; domain=.stackoverflow.com
 
 Connection closed by foreign host.
 ```
+Как понял,ответ (HTTP/1.1 301 Moved Permanently ) обозначает, что ресурс перемещен сюда - location: https://stackoverflow.com/questions  
+
+
 2. Повторите задание 1 в браузере, используя консоль разработчика F12.  
 откройте вкладку Network  
 отправьте запрос http://stackoverflow.com  
