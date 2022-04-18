@@ -45,7 +45,21 @@ Connection closed by foreign host.
 найдите первый ответ HTTP сервера, откройте вкладку Headers  
 укажите в ответе полученный HTTP код.  
 проверьте время загрузки страницы, какой запрос обрабатывался дольше всего?  
-приложите скриншот консоли браузера в ответ.  
+приложите скриншот консоли браузера в ответ. 
+
+Первым ответом со статусом 307 был - HTTP 307 Internal Redirect
+```
+Request URL: http://stackoverflow.com/
+Request Method: GET
+Status Code: 301 Moved Permanently
+Remote Address: 151.101.193.69:80
+Referrer Policy: strict-origin-when-cross-origin
+```
+Страница загрузилась за - Load: 1.40 s  
+Дольше всего отрабатывался запрос - https://stackoverflow.com/  
+![image](https://user-images.githubusercontent.com/99823951/163750401-31ba10f6-36b8-4106-9792-da1a8032ae90.png)
+
+ 
 
 3. Какой IP адрес у вас в интернете?
 
