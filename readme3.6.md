@@ -8,7 +8,8 @@ HOST: stackoverflow.com
 [press enter]  
 В ответе укажите полученный HTTP код, что он означает?  
 
-```vagrant@vagrant:~$ telnet stackoverflow.com 80
+```
+vagrant@vagrant:~$ telnet stackoverflow.com 80
 Trying 151.101.129.69...
 Connected to stackoverflow.com.
 Escape character is '^]'.
