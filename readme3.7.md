@@ -134,9 +134,9 @@ bond0            DOWN           92:7a:bd:bc:8f:c3 <NO-CARRIER,BROADCAST,MULTICAS
 ```arp -d```- удалить кэш-таблицу  
 ```arp -d <ip-address>``` - удалить конкретный адрес
 
-в Ubuntu:
-```ip neighbour show``` - показать ARP таблицу
-```ip neighbour del [ip address] dev [interface]``` - удалить из ARP таблицы конкретный адрес
-```ip neighbour flush all``` - очищает таблицу ARP
+в Ubuntu:  
+```ip neighbour show``` - показать ARP таблицу  
+```ip neighbour del [ip address] dev [interface]``` - удалить из ARP таблицы конкретный адрес  
+```ip neighbour flush all``` - очищает таблицу ARP  
 
 
