@@ -189,6 +189,24 @@ Paths: (24 available, best #8, table default)
 ```
 
 2. Создайте dummy0 интерфейс в Ubuntu. Добавьте несколько статических маршрутов. Проверьте таблицу маршрутизации.  
+```
+vagrant@vagrant:~$ ip a | grep dummy
+4: dummy0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+```
+```
+vagrant@vagrant:~$ ip -br route
+default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100
+10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15
+10.0.2.2 dev eth0 proto dhcp scope link src 10.0.2.15 metric 100
+vagrant@vagrant:~$ sudo ip route add 172.16.10.0/24 via 10.0.2.1
+vagrant@vagrant:~$ sudo ip route add 192.168.40.0/24 dev eth0
+vagrant@vagrant:~$ ip -br route
+default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100
+10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15
+10.0.2.2 dev eth0 proto dhcp scope link src 10.0.2.15 metric 100
+172.16.10.0/24 via 10.0.2.1 dev eth0
+192.168.40.0/24 dev eth0 scope link
+```
 
 3. Проверьте открытые TCP порты в Ubuntu, какие протоколы и приложения используют эти порты? Приведите несколько примеров.
 
