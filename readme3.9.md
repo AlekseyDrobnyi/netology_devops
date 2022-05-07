@@ -77,6 +77,53 @@ vagrant@vagrant:~$ curl 10.0.2.15
 </html>
 ```
 
+```
+vagrant@vagrant:~$ curl --insecure -v https://10.0.2.15
+*   Trying 10.0.2.15:443...
+* TCP_NODELAY set
+* Connected to 10.0.2.15 (10.0.2.15) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: /etc/ssl/certs/ca-certificates.crt
+  CApath: /etc/ssl/certs
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* ALPN, server accepted to use http/1.1
+* Server certificate:
+*  subject: C=RU; ST=Example; L=Example; O=Example; CN=10.0.2.15 emailAddress=test@example.com
+*  start date: May 07 11:15:22 2022 GMT
+*  expire date: May 07 11:15:22 2023 GMT
+*  issuer: C=RU; ST=Example; L=Example; O=Example; CN=10.0.2.15; emailAddress=test@example.com
+*  SSL certificate verify result: self signed certificate (18), continuing anyway.
+> GET / HTTP/1.1
+> Host: 10.0.2.15
+> User-Agent: curl/7.74.0
+> Accept: */*
+>
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* old SSL session ID is stale, removing
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< Date: Sat, May 07 11:15:22 GMT
+< Server: Apache/2.4.48 (Ubuntu)
+< Last-Modified: Sat, May 07 11:15:22 GMT
+< ETag: "14-5d6b9bbc20d84"
+< Accept-Ranges: bytes
+< Content-Length: 20
+< Content-Type: text/html
+<
+<h1>Success!  The your_domain virtual host is working!</h1>
+* Connection #0 to host 10.0.2.15 left intact
+```
 
 
 
