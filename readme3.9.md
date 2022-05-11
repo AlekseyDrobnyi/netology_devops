@@ -143,7 +143,73 @@ vagrant@vagrant:~/testssl.sh$ ./testssl.sh -U --sneaky https://netology.ru/
 ```
 
 5. Установите на Ubuntu ssh сервер, сгенерируйте новый приватный ключ. Скопируйте свой публичный ключ на другой сервер. Подключитесь к серверу по SSH-ключу.  
+```
+vagrant@vagrant:~$ systemctl status sshd.service
+● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/lib/systemd/system/ssh.service; enabled; vendor preset: enabled)
+     Active: active (running) since Tue 2022-04-26 03:44:17 UTC; 2 weeks 0 days ago
+       Docs: man:sshd(8)
+             man:sshd_config(5)
+   Main PID: 693 (sshd)
+      Tasks: 1 (limit: 1071)
+     Memory: 6.7M
+     CGroup: /system.slice/ssh.service
+             └─693 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+```             
+```
+vagrant@vagrant:~$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/vagrant/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/vagrant/.ssh/id_rsa
+Your public key has been saved in /home/vagrant/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:p3BAlIlIk4ZoEAJonm0XrCz/NZ8g/QotKSkHP2CFOzE vagrant@vagrant
+The key's randomart image is:
++---[RSA 3072]----+
+|X+oo.ooo         |
+|=o=..+o          |
+|+E+.. o          |
+| +== . .         |
+| *+ . o S .      |
+|. =...oB o       |
+| . *.+o.* .      |
+|  o o.o  +       |
+|       ..        |
++----[SHA256]-----+
+```
+```
+vagrant@vagrant:~$ ssh-copy-id vagrant@10.0.2.15
 
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/vagrant/.ssh/id_rsa.pub"
+The authenticity of host '10.0.2.15 (10.0.2.15)' can't be established.
+ECDSA key fingerprint is SHA256:/rZjeIEeI4GXObGdc6iTj7LjwLh3TA1bwOPXEHLrkaM.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+vagrant@10.0.2.15's password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'vagrant@10.0.2.15'"
+and check to make sure that only the key(s) you wanted were added.
+
+vagrant@vagrant:~$ ssh vagrant@10.0.2.15
+Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-91-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Wed 11 May 2022 02:56:41 AM UTC
+
+
+This system is built by the Bento project by Chef Software
+More information can be found at https://github.com/chef/bento
+Last login: Wed May 11 02:56:4 2022 from 10.0.2.2
+```
+             
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH клиента, так чтобы вход на удаленный сервер осуществлялся по имени сервера.  
 
 7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.  
