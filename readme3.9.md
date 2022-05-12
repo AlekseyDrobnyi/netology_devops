@@ -252,6 +252,118 @@ Last login: Thu May 12 02:18:01 2022 from 10.0.3.15
 ```
 8. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.  
 
+```
+vagrant@vagrant:~$ sudo tcpdump -c 100 -w 22.pcap
+tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+100 packets captured
+102 packets received by filter
+0 packets dropped by kernel
+```
+```
+vagrant@vagrant:~$ sudo tshark -r 22.pcap
+Running as user "root" and group "root". This could be dangerous.
+    1   0.000000    10.0.2.15 → 10.0.2.2     SSH 98 Server: Encrypted packet (len=44)
+    2   0.000292     10.0.2.2 → 10.0.2.15    TCP 60 58430 → 22 [ACK] Seq=1 Ack=45 Win=65535 Len=0
+    3  31.939055     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [SYN] Seq=0 Win=65535 Len=0 MSS=1460
+    4  31.939091    10.0.2.15 → 10.0.2.2     TCP 58 22 → 56049 [SYN, ACK] Seq=0 Ack=1 Win=64240 Len=0 MSS=1460
+    5  31.939169     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=1 Ack=1 Win=65535 Len=0
+    6  31.940348     10.0.2.2 → 10.0.2.15    SSH 75 Client: Protocol (SSH-2.0-OpenSSH_8.8)
+    7  31.940357    10.0.2.15 → 10.0.2.2     TCP 54 22 → 56049 [ACK] Seq=1 Ack=22 Win=64219 Len=0
+    8  31.945491    10.0.2.15 → 10.0.2.2     SSHv2 95 Server: Protocol (SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.3)
+    9  31.945651     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=22 Ack=42 Win=65535 Len=0
+   10  31.946153    10.0.2.15 → 10.0.2.2     SSHv2 1110 Server: Key Exchange Init
+   11  31.946272     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=22 Ack=1098 Win=65535 Len=0
+   12  31.946328     10.0.2.2 → 10.0.2.15    SSHv2 1614 Client: Key Exchange Init
+   13  31.946333    10.0.2.15 → 10.0.2.2     TCP 54 22 → 56049 [ACK] Seq=1098 Ack=1582 Win=62780 Len=0
+   14  31.948342     10.0.2.2 → 10.0.2.15    SSHv2 102 Client: Diffie-Hellman Key Exchange Init
+   15  31.948348    10.0.2.15 → 10.0.2.2     TCP 54 22 → 56049 [ACK] Seq=1098 Ack=1630 Win=62780 Len=0
+   16  31.953184    10.0.2.15 → 10.0.2.2     SSHv2 490 Server: Diffie-Hellman Key Exchange Reply, New Keys, Encrypted packet (len=228)
+   17  31.953312     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=1630 Ack=1534 Win=65535 Len=0
+   18  31.959689     10.0.2.2 → 10.0.2.15    SSHv2 70 Client: New Keys
+   19  31.959689     10.0.2.2 → 10.0.2.15    SSHv2 98 Client: Encrypted packet (len=44)
+   20  31.959708    10.0.2.15 → 10.0.2.2     TCP 54 22 → 56049 [ACK] Seq=1534 Ack=1646 Win=62780 Len=0
+   21  31.959729    10.0.2.15 → 10.0.2.2     TCP 54 22 → 56049 [ACK] Seq=1534 Ack=1690 Win=62780 Len=0
+   22  31.959824    10.0.2.15 → 10.0.2.2     SSHv2 98 Server: Encrypted packet (len=44)
+   23  31.959927     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=1690 Ack=1578 Win=65535 Len=0
+   24  31.959963     10.0.2.2 → 10.0.2.15    SSHv2 122 Client: Encrypted packet (len=68)
+   25  31.959967    10.0.2.15 → 10.0.2.2     TCP 54 22 → 56049 [ACK] Seq=1578 Ack=1758 Win=62780 Len=0
+   26  31.966774    10.0.2.15 → 10.0.2.2     SSHv2 106 Server: Encrypted packet (len=52)
+   27  31.966889     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=1758 Ack=1630 Win=65535 Len=0
+   28  31.969257     10.0.2.2 → 10.0.2.15    SSHv2 706 Client: Encrypted packet (len=652)
+   29  31.969268    10.0.2.15 → 10.0.2.2     TCP 54 22 → 56049 [ACK] Seq=1630 Ack=2410 Win=62780 Len=0
+   30  31.977001    10.0.2.15 → 10.0.2.2     SSHv2 82 Server: Encrypted packet (len=28)
+   31  31.977212     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2410 Ack=1658 Win=65535 Len=0
+   32  31.977466     10.0.2.2 → 10.0.2.15    SSHv2 166 Client: Encrypted packet (len=112)
+   33  31.977472    10.0.2.15 → 10.0.2.2     TCP 54 22 → 56049 [ACK] Seq=1658 Ack=2522 Win=62780 Len=0
+   34  32.203293    10.0.2.15 → 10.0.2.2     SSHv2 814 Server: Encrypted packet (len=760)
+   35  32.203513     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2522 Ack=2418 Win=65535 Len=0
+   36  32.203527    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   37  32.203647     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2522 Ack=2454 Win=65535 Len=0
+   38  32.203973     10.0.2.2 → 10.0.2.15    SSHv2 294 Client: Encrypted packet (len=240)
+   39  32.203981    10.0.2.15 → 10.0.2.2     TCP 54 22 → 56049 [ACK] Seq=2454 Ack=2762 Win=62780 Len=0
+   40  32.204868    10.0.2.15 → 10.0.2.2     SSHv2 162 Server: Encrypted packet (len=108)
+   41  32.205015     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2762 Ack=2562 Win=65535 Len=0
+   42  32.205087    10.0.2.15 → 10.0.2.2     SSHv2 506 Server: Encrypted packet (len=452)
+   43  32.205406     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2762 Ack=3014 Win=65535 Len=0
+   44  32.213536    10.0.2.15 → 10.0.2.2     SSHv2 122 Server: Encrypted packet (len=68)
+   45  32.213793     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2762 Ack=3082 Win=65535 Len=0
+   46  34.248918     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   47  34.248981    10.0.2.15 → 10.0.2.2     TCP 54 22 → 56049 [ACK] Seq=3082 Ack=2798 Win=62780 Len=0
+   48  34.249484    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   49  34.249784     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2798 Ack=3118 Win=65535 Len=0
+   50  34.330015     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   51  34.330037    10.0.2.15 → 10.0.2.2     TCP 54 22 → 56049 [ACK] Seq=3118 Ack=2834 Win=62780 Len=0
+   52  34.330440    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   53  34.330649     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2834 Ack=3154 Win=65535 Len=0
+   54  34.562564     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   55  34.563054    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   56  34.563232     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2870 Ack=3190 Win=65535 Len=0
+   57  34.563824    10.0.2.15 → 10.0.2.2     SSHv2 146 Server: Encrypted packet (len=92)
+   58  34.564010    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   59  34.566196     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2870 Ack=3282 Win=65535 Len=0
+   60  34.566196     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2870 Ack=3318 Win=65535 Len=0
+   61  38.801127     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   62  38.801625    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   63  38.801893     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2906 Ack=3354 Win=65535 Len=0
+   64  38.899669     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   65  38.900142    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   66  38.900457     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2942 Ack=3390 Win=65535 Len=0
+   67  39.074340     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   68  39.074876    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   69  39.075171     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=2978 Ack=3426 Win=65535 Len=0
+   70  39.402324     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   71  39.402802    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   72  39.403144     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=3014 Ack=3462 Win=65535 Len=0
+   73  39.704906     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   74  39.705401    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   75  39.705752     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=3050 Ack=3498 Win=65535 Len=0
+   76  40.081028     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   77  40.081646    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   78  40.081986     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=3086 Ack=3534 Win=65535 Len=0
+   79  40.328951     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   80  40.329338    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   81  40.329552     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=3122 Ack=3570 Win=65535 Len=0
+   82  40.427090     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   83  40.427554    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   84  40.427826     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=3158 Ack=3606 Win=65535 Len=0
+   85  41.015548     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   86  41.016009    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   87  41.016274     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=3194 Ack=3642 Win=65535 Len=0
+   88  41.214847     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   89  41.215090    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   90  41.215293     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=3230 Ack=3678 Win=65535 Len=0
+   91  41.981252     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   92  41.981778    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   93  41.982104     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=3266 Ack=3714 Win=65535 Len=0
+   94  43.648846     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   95  43.649366    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   96  43.649640     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=3302 Ack=3750 Win=65535 Len=0
+   97  43.901014     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+   98  43.901568    10.0.2.15 → 10.0.2.2     SSHv2 90 Server: Encrypted packet (len=36)
+   99  43.901860     10.0.2.2 → 10.0.2.15    TCP 60 56049 → 22 [ACK] Seq=3338 Ack=3786 Win=65535 Len=0
+  100  44.079848     10.0.2.2 → 10.0.2.15    SSHv2 90 Client: Encrypted packet (len=36)
+  ```
+
 
 
 
