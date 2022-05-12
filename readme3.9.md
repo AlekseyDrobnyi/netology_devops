@@ -160,85 +160,101 @@ vagrant@vagrant:~$ systemctl status sshd.service
 vagrant@vagrant:~$ ssh-keygen
 Generating public/private rsa key pair.
 Enter file in which to save the key (/home/vagrant/.ssh/id_rsa):
+/home/vagrant/.ssh/id_rsa already exists.
+Overwrite (y/n)? y
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
 Your identification has been saved in /home/vagrant/.ssh/id_rsa
 Your public key has been saved in /home/vagrant/.ssh/id_rsa.pub
 The key fingerprint is:
-SHA256:p3BAlIlIk4ZoEAJonm0XrCz/NZ8g/QotKSkHP2CFOzE vagrant@vagrant
+SHA256:Yu+QbqRunfp1QMxTPy+3NU/PPIRSxN7enYdO5SN+Mbw vagrant@vagrant
 The key's randomart image is:
 +---[RSA 3072]----+
-|X+oo.ooo         |
-|=o=..+o          |
-|+E+.. o          |
-| +== . .         |
-| *+ . o S .      |
-|. =...oB o       |
-| . *.+o.* .      |
-|  o o.o  +       |
-|       ..        |
+|          . ..   |
+|       o . ...   |
+|        =   +..  |
+|       . .  .+...|
+|      o S  ...=**|
+|     ..+ .  .++&O|
+|     +o.o . .oo.@|
+|    o.++ .   ..E.|
+|   oo+o .     .  |
 +----[SHA256]-----+
 ```
 ```
-vagrant@vagrant:~$ ssh-copy-id vagrant@10.0.2.15
-
+vagrant@vagrant:~$ ssh-copy-id vagrant@10.0.3.15
 /usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/vagrant/.ssh/id_rsa.pub"
-The authenticity of host '10.0.2.15 (10.0.2.15)' can't be established.
-ECDSA key fingerprint is SHA256:/rZjeIEeI4GXObGdc6iTj7LjwLh3TA1bwOPXEHLrkaM.
+The authenticity of host '10.0.3.15 (10.0.3.15)' can't be established.
+ECDSA key fingerprint is SHA256:RztZ38lZsUpiN3mQrXHa6qtsUgsttBXWJibL2nAiwdQ.
 Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-vagrant@10.0.2.15's password:
+vagrant@10.0.3.15's password:
 
 Number of key(s) added: 1
 
-Now try logging into the machine, with:   "ssh 'vagrant@10.0.2.15'"
+Now try logging into the machine, with:   "ssh 'vagrant@10.0.3.15'"
 and check to make sure that only the key(s) you wanted were added.
 
-vagrant@vagrant:~$ ssh vagrant@10.0.2.15
+vagrant@vagrant:~$ ssh vagrant@10.0.3.15
 Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-91-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
  * Management:     https://landscape.canonical.com
  * Support:        https://ubuntu.com/advantage
 
-  System information as of Wed 11 May 2022 02:56:41 AM UTC
+  System information as of Thu 12 May 2022 02:18:01 AM UTC
+
+  System load:  0.0                Processes:             125
+  Usage of /:   12.8% of 30.88GB   Users logged in:       1
+  Memory usage: 19%                IPv4 address for eth0: 10.0.2.15
+  Swap usage:   0%                 IPv4 address for eth1: 10.0.3.15
 
 
 This system is built by the Bento project by Chef Software
 More information can be found at https://github.com/chef/bento
-Last login: Wed May 11 02:56:4 2022 from 10.0.2.2
+Last login: Thu May 12 02:06:40 2022 from 10.0.2.2
 ```
              
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH клиента, так чтобы вход на удаленный сервер осуществлялся по имени сервера.  
 
 ```
-vagrant@vagrant:~$ mv /home/vagrant/.ssh/id_rsa /home/vagrant/.ssh/linux2_rsa
+vagrant@vagrant:~$ ls /home/vagrant/.ssh
+authorized_keys  id_rsa  id_rsa.pub  known_hosts
+vagrant@vagrant:~$ mv /home/vagrant/.ssh/id_rsa /home/vagrant/.ssh/vagrant2_rsa
 vagrant@vagrant:~$ touch ~/.ssh/config && chmod 600 ~/.ssh/config
 vagrant@vagrant:~$ nano .ssh/config
 
-Host linux2
-     HostName 10.5.5.5
+Host vagrant2
+     HostName 10.0.3.15
      User vagrant
-     IdentityFile ~/.ssh/linux2_rsa
+     IdentityFile ~/.ssh/vagrant2_rsa
      
-vagrant@vagrant:~$ ssh linux2
-Welcome to Ubuntu 21.10 (GNU/Linux 5.13.0-22-generic x86_64)
+     
+vagrant@vagrant:~$ ssh vagrant2
+Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-91-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
  * Management:     https://landscape.canonical.com
  * Support:        https://ubuntu.com/advantage
 
-  System information as of Sat Jan 29 03:21:15 PM UTC 2022
+  System information as of Thu 12 May 2022 02:21:15 AM UTC
 
-  System load:  0.0                Processes:             113
-  Usage of /:   11.6% of 30.83GB   Users logged in:       1
-  Memory usage: 20%                IPv4 address for eth0: 10.0.2.15
-  Swap usage:   0%                 IPv4 address for eth1: 10.5.5.5
+  System load:  0.0                Processes:             127
+  Usage of /:   12.8% of 30.88GB   Users logged in:       1
+  Memory usage: 19%                IPv4 address for eth0: 10.0.2.15
+  Swap usage:   0%                 IPv4 address for eth1: 10.0.3.15
 
 
 This system is built by the Bento project by Chef Software
 More information can be found at https://github.com/chef/bento
-Last login: Sat Jan 29 15:12:03 2022 from 10.5.5.2
+Last login: Thu May 12 02:18:01 2022 from 10.0.3.15
 ```
 8. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.  
+
+
+
+
+
+
+
