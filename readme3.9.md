@@ -212,4 +212,33 @@ Last login: Wed May 11 02:56:4 2022 from 10.0.2.2
              
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH клиента, так чтобы вход на удаленный сервер осуществлялся по имени сервера.  
 
-7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.  
+```
+vagrant@vagrant:~$ mv /home/vagrant/.ssh/id_rsa /home/vagrant/.ssh/linux2_rsa
+vagrant@vagrant:~$ touch ~/.ssh/config && chmod 600 ~/.ssh/config
+vagrant@vagrant:~$ nano .ssh/config
+
+Host linux2
+     HostName 10.5.5.5
+     User vagrant
+     IdentityFile ~/.ssh/linux2_rsa
+     
+vagrant@vagrant:~$ ssh linux2
+Welcome to Ubuntu 21.10 (GNU/Linux 5.13.0-22-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sat Jan 29 03:21:15 PM UTC 2022
+
+  System load:  0.0                Processes:             113
+  Usage of /:   11.6% of 30.83GB   Users logged in:       1
+  Memory usage: 20%                IPv4 address for eth0: 10.0.2.15
+  Swap usage:   0%                 IPv4 address for eth1: 10.5.5.5
+
+
+This system is built by the Bento project by Chef Software
+More information can be found at https://github.com/chef/bento
+Last login: Sat Jan 29 15:12:03 2022 from 10.5.5.2
+```
+8. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.  
