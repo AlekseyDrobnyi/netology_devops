@@ -13,7 +13,7 @@
 4. Воспользуйтесь [инструкцией](https://registry.terraform.io/providers/yandex-cloud/yandex/latest/docs) на сайте терраформа, что бы 
 не указывать авторизационный токен в коде, а терраформ провайдер брал его из переменных окружений.
 
-
+Создал технический аккаунт
 ```Bash
 ubuntu@ubuntu-VirtualBox:~/cloud-terraform$ yc iam service-account get sa-terraform
 id: ajeg721h416vi7cag2bm
@@ -33,38 +33,11 @@ ubuntu@ubuntu-VirtualBox:~/cloud-terraform$ yc iam service-account list --folder
 
 ## Задача 2. Создание aws ec2 или yandex_compute_instance через терраформ. 
 
-1. В каталоге `terraform` вашего основного репозитория, который был создан в начале курсе, создайте файл `main.tf` и `versions.tf`.
-2. Зарегистрируйте провайдер 
-   1. для [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs). В файл `main.tf` добавьте
-   блок `provider`, а в `versions.tf` блок `terraform` с вложенным блоком `required_providers`. Укажите любой выбранный вами регион 
-   внутри блока `provider`.
-   2. либо для [yandex.cloud](https://registry.terraform.io/providers/yandex-cloud/yandex/latest/docs). Подробную инструкцию можно найти 
-   [здесь](https://cloud.yandex.ru/docs/solutions/infrastructure-management/terraform-quickstart).
-3. Внимание! В гит репозиторий нельзя пушить ваши личные ключи доступа к аккаунту. Поэтому в предыдущем задании мы указывали
-их в виде переменных окружения. 
-4. В файле `main.tf` воспользуйтесь блоком `data "aws_ami` для поиска ami образа последнего Ubuntu.  
-5. В файле `main.tf` создайте рессурс 
-   1. либо [ec2 instance](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance).
-   Постарайтесь указать как можно больше параметров для его определения. Минимальный набор параметров указан в первом блоке 
-   `Example Usage`, но желательно, указать большее количество параметров.
-   2. либо [yandex_compute_image](https://registry.terraform.io/providers/yandex-cloud/yandex/latest/docs/resources/compute_image).
-6. Также в случае использования aws:
-   1. Добавьте data-блоки `aws_caller_identity` и `aws_region`.
-   2. В файл `outputs.tf` поместить блоки `output` с данными об используемых в данный момент: 
-       * AWS account ID,
-       * AWS user ID,
-       * AWS регион, который используется в данный момент, 
-       * Приватный IP ec2 инстансы,
-       * Идентификатор подсети в которой создан инстанс.  
-7. Если вы выполнили первый пункт, то добейтесь того, что бы команда `terraform plan` выполнялась без ошибок. 
-
-
-В качестве результата задания предоставьте:
-1. Ответ на вопрос: при помощи какого инструмента (из разобранных на прошлом занятии) можно создать свой образ ami?
-1. Ссылку на репозиторий с исходной конфигурацией терраформа.  
+[main.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.2/etc/main.tf)
+[version.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.2/etc/version.tf)
  
 ---
-
+Регистрируем провайдер
 ```bash
 ubuntu@ubuntu-VirtualBox:~/cloud-terraform$ terraform init
 
@@ -84,6 +57,8 @@ If you ever set or change modules or backend configuration for Terraform,
 rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
 ```
+
+Запускам применение нашей конфигурации
 ```bash
 buntu@ubuntu-VirtualBox:~/cloud-terraform$ terraform apply -auto-approve
 
@@ -108,7 +83,7 @@ internal_ip_address_vm_1 = "192.168.10.18"
 
 ```
 
-
+Удаляем конфигурацию из облака Яндекс.
 ```bash
 ubuntu@ubuntu-VirtualBox:~/cloud-terraform$ terraform destroy -auto-approve
 yandex_vpc_network.network-1: Refreshing state... [id=enpqihq02v6nm70pp1u6]
