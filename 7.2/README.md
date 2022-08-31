@@ -33,7 +33,7 @@ ubuntu@ubuntu-VirtualBox:~/cloud-terraform$ yc iam service-account list --folder
 
 ## Задача 2. Создание aws ec2 или yandex_compute_instance через терраформ. 
 
-[main.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.2/etc/main.tf)
+[main.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.2/etc/main.tf)  
 [version.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.2/etc/version.tf)
  
 ---
