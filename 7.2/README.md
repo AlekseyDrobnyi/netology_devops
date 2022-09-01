@@ -34,8 +34,13 @@ ubuntu@ubuntu-VirtualBox:~/cloud-terraform$ yc iam service-account list --folder
 ## Задача 2. Создание aws ec2 или yandex_compute_instance через терраформ. 
 
 [main.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.2/etc/main.tf)  
-[version.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.2/etc/version.tf)
- 
+[version.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.2/etc/version.tf)  
+
+
+ Ответ на вопрос: при помощи какого инструмента (из разобранных на прошлом занятии) можно создать свой образ ami?
+Применяемо к Yandex Cloud на прошлых занятиях разбирали Packer для создания собственных образов ОС.
+"Packer позволяет создавать образы дисков виртуальных машин с заданными в конфигурационном файле параметрами." [ссылка на инструкцию YC](https://cloud.yandex.ru/docs/tutorials/infrastructure-management/packer-quickstart) 
+
 ---
 Регистрируем провайдер
 ```bash
