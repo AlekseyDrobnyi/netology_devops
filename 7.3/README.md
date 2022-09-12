@@ -408,6 +408,6 @@ internal_ip_address_vm_1 = [
 ```
 ![image](https://user-images.githubusercontent.com/99823951/189623381-2b131fe0-902e-4a7d-939e-42219fb0ea38.png)
 
-[файл main.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.3/src/main.tf)  
-[файл s3.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.3/src/s3.tf)  
-[файл version.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.3/src/version.tf)  
+файл [main.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.3/src/main.tf)  
+файл [s3.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.3/src/s3.tf)  
+файл [version.tf](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/7.3/src/version.tf)  
