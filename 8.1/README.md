@@ -3,7 +3,7 @@
 ## Подготовка к выполнению
 1. Установите ansible версии 2.10 или выше.
 2. Создайте свой собственный публичный репозиторий на github с произвольным именем.
-3. Скачайте [playbook](./playbook/) из репозитория с домашним заданием и перенесите его в свой репозиторий.
+3. Скачайте [playbook](./playbook/) из репозитория с домашним заданием и перенесите его в свой [репозиторий](https://github.com/AlekseyDrobnyi/netology_devops/tree/main/8.1).
 
 ссылка на [readme.md самоконтроля](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/8.1/playbook/readme.md)
 
