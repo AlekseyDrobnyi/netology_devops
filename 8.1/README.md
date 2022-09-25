@@ -7,9 +7,89 @@
 
 ## Основная часть
 1. Попробуйте запустить playbook на окружении из `test.yml`, зафиксируйте какое значение имеет факт `some_fact` для указанного хоста при выполнении playbook'a.
+```bash
+ubuntu@ubuntu-VirtualBox:~/git/netology_devops/8.1/playbook$ ansible-playbook site.yml -i inventory/test.yml 
+
+PLAY [Print os facts] *************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************
+ok: [localhost]
+
+TASK [Print OS] *******************************************************************************************************
+ok: [localhost] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] *****************************************************************************************************
+ok: [localhost] => {
+    "msg": 12
+}
+
+PLAY RECAP ************************************************************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+```
 2. Найдите файл с переменными (group_vars) в котором задаётся найденное в первом пункте значение и поменяйте его на 'all default fact'.
+```bash
+ubuntu@ubuntu-VirtualBox:~/git/netology_devops/8.1/playbook$ cat group_vars/all/examp.yml
+---
+  some_fact: all default fact
+  
+ubuntu@ubuntu-VirtualBox:~/git/netology_devops/8.1/playbook$ ansible-playbook site.yml -i inventory/test.yml 
+
+PLAY [Print os facts] *************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************
+ok: [localhost]
+
+TASK [Print OS] *******************************************************************************************************
+ok: [localhost] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] *****************************************************************************************************
+ok: [localhost] => {
+    "msg": "all default fact"
+}
+
+PLAY RECAP ************************************************************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+```
+
 3. Воспользуйтесь подготовленным (используется `docker`) или создайте собственное окружение для проведения дальнейших испытаний.
+local  
 4. Проведите запуск playbook на окружении из `prod.yml`. Зафиксируйте полученные значения `some_fact` для каждого из `managed host`.
+```bash
+ubuntu@ubuntu-VirtualBox:~/git/netology_devops/8.1/playbook$ ansible-playbook site.yml -i inventory/prod.yml 
+
+PLAY [Print os facts] *************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************
+ok: [ubuntu]
+ok: [centos7]
+
+TASK [Print OS] *******************************************************************************************************
+ok: [centos7] => {
+    "msg": "Ubuntu"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] *****************************************************************************************************
+ok: [centos7] => {
+    "msg": "el"
+}
+ok: [ubuntu] => {
+    "msg": "deb"
+}
+
+PLAY RECAP ************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
+
 5. Добавьте факты в `group_vars` каждой из групп хостов так, чтобы для `some_fact` получились следующие значения: для `deb` - 'deb default fact', для `el` - 'el default fact'.
 6.  Повторите запуск playbook на окружении `prod.yml`. Убедитесь, что выдаются корректные значения для всех хостов.
 7. При помощи `ansible-vault` зашифруйте факты в `group_vars/deb` и `group_vars/el` с паролем `netology`.
