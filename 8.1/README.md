@@ -57,8 +57,8 @@ localhost                  : ok=3    changed=0    unreachable=0    failed=0    s
 
 ```
 
-3. Воспользуйтесь подготовленным (используется `docker`) или создайте собственное окружение для проведения дальнейших испытаний.
-local  
+3. Воспользуйтесь подготовленным (используется `docker`) или создайте собственное окружение для проведения дальнейших испытаний.  
+использовал ```local```
 4. Проведите запуск playbook на окружении из `prod.yml`. Зафиксируйте полученные значения `some_fact` для каждого из `managed host`.
 ```bash
 ubuntu@ubuntu-VirtualBox:~/git/netology_devops/8.1/playbook$ ansible-playbook site.yml -i inventory/prod.yml 
@@ -167,7 +167,8 @@ ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    s
 
 9. Посмотрите при помощи `ansible-doc` список плагинов для подключения. Выберите подходящий для работы на `control node`.
 ansible-doc -t connection -l
-local
+подойдет плагин ```local```
+
 10. В `prod.yml` добавьте новую группу хостов с именем  `local`, в ней разместите localhost с необходимым типом подключения.
 ```bash
 ubuntu@ubuntu-VirtualBox:~/git/netology_devops/8.1/playbook$ cat inventory/prod.yml
