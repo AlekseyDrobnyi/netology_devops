@@ -10,9 +10,11 @@
 
 Ссылка на репозиторий LightHouse: https://github.com/VKCOM/lighthouse
 
+
 ## Основная часть
 
-1. Допишите playbook: нужно сделать ещё один play, который устанавливает и настраивает lighthouse.
+1. Допишите playbook: нужно сделать ещё один play, который устанавливает и настраивает lighthouse.  
+ссылка на мой [playbook](https://github.com/AlekseyDrobnyi/netology_devops/tree/main/8.3/playbook)  
 2. При создании tasks рекомендую использовать модули: `get_url`, `template`, `yum`, `apt`.
 3. Tasks должны: скачать статику lighthouse, установить nginx или любой другой webserver, настроить его конфиг для открытия lighthouse, запустить webserver.  
 
