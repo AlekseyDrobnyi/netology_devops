@@ -14,7 +14,8 @@
 
 1. Допишите playbook: нужно сделать ещё один play, который устанавливает и настраивает lighthouse.
 2. При создании tasks рекомендую использовать модули: `get_url`, `template`, `yum`, `apt`.
-3. Tasks должны: скачать статику lighthouse, установить nginx или любой другой webserver, настроить его конфиг для открытия lighthouse, запустить webserver.
+3. Tasks должны: скачать статику lighthouse, установить nginx или любой другой webserver, настроить его конфиг для открытия lighthouse, запустить webserver.  
+
 После первых разуском на удаленной ВМ получал ошибку, при установке Nginx. На локальной машине такого не было. 
 ```bash
 [centos@localhost playbook]$ ansible-playbook -i inventory/prod.yml site.yml
@@ -62,7 +63,9 @@ clickhouse-01              : ok=4    changed=1    unreachable=0    failed=0    s
 lighthouse-01              : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
 vector-01                  : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 ```
-После добавления таски на установку ```install EPEL repo``` все взлетело.
+
+
+После добавления таски на установку ```install EPEL repo``` все взлетело.  
 ```bash
 [centos@localhost playbook]$ ansible-playbook -i inventory/prod.yml site.yml
 
