@@ -5,6 +5,9 @@
 1. (Необязательно) Познакомтесь с [lighthouse](https://youtu.be/ymlrNlaHzIY?t=929)
 2. Подготовьте в Yandex Cloud три хоста: для `clickhouse`, для `vector` и для `lighthouse`.
 
+![image](https://user-images.githubusercontent.com/99823951/195006861-809f196f-b00d-47b3-b59d-fb5fb0cafc14.png)
+
+
 Ссылка на репозиторий LightHouse: https://github.com/VKCOM/lighthouse
 
 ## Основная часть
