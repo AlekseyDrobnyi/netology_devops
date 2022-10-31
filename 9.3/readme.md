@@ -4,14 +4,15 @@
 
 1. Создаём 2 VM в yandex cloud со следующими параметрами: 2CPU 4RAM Centos7(остальное по минимальным требованиям)
 ![image](https://user-images.githubusercontent.com/99823951/198934504-82875048-da42-4e7d-85fc-2c14b3db50a4.png)
-
 2. Прописываем в [inventory](./infrastructure/inventory/cicd/hosts.yml) [playbook'a](./infrastructure/site.yml) созданные хосты
 3. Добавляем в [files](./infrastructure/files/) файл со своим публичным ключом (id_rsa.pub). Если ключ называется иначе - найдите таску в плейбуке, которая использует id_rsa.pub имя и исправьте на своё
 4. Запускаем playbook, ожидаем успешного завершения
 5. Проверяем готовность Sonarqube через [браузер](http://localhost:9000)
-6. Заходим под admin\admin, меняем пароль на свой
-7.  Проверяем готовность Nexus через [бразуер](http://localhost:8081)
-8. Подключаемся под admin\admin123, меняем пароль, сохраняем анонимный доступ
+![image](https://user-images.githubusercontent.com/99823951/198935617-260de111-a4e2-4ca8-9e34-f64cd8fe6b7c.png)
+7. Заходим под admin\admin, меняем пароль на свой
+8.  Проверяем готовность Nexus через [бразуер](http://localhost:8081)
+![image](https://user-images.githubusercontent.com/99823951/198935833-ea9f306f-3ddb-4c0c-8360-267e796fdcaa.png)
+10. Подключаемся под admin\admin123, меняем пароль, сохраняем анонимный доступ
 
 ## Знакомоство с SonarQube
 
