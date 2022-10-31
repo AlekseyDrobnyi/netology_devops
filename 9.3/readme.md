@@ -386,6 +386,6 @@ OS name: "linux", version: "3.10.0-1160.el7.x86_64", arch: "amd64", family: "uni
 1. Меняем в `pom.xml` блок с зависимостями под наш артефакт из первого пункта задания для Nexus (java с версией 8_282)
 2. Запускаем команду `mvn package` в директории с `pom.xml`, ожидаем успешного окончания
 3. Проверяем директорию `~/.m2/repository/`, находим наш артефакт
-4. В ответе присылаем исправленный файл [pom.xml] (https://github.com/AlekseyDrobnyi/netology_devops/blob/main/9.3/pom.xml)
+4. В ответе присылаем исправленный файл [pom.xml](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/9.3/pom.xml)
 
 
