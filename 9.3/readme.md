@@ -44,7 +44,7 @@
 3. Проверяем, что все файлы загрузились успешно
 ![image](https://user-images.githubusercontent.com/99823951/198955682-e673a073-274c-41ca-acbc-c5f857627abb.png)
 
-5. В ответе присылаем файл `maven-metadata.xml` для этого артефекта
+5. В ответе присылаем файл [`maven-metadata.xml`](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/9.3/maven-metadata.xml) для этого артефекта
 
 ### Знакомство с Maven
 
