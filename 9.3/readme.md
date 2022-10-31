@@ -44,7 +44,7 @@
 3. Проверяем, что все файлы загрузились успешно
 ![image](https://user-images.githubusercontent.com/99823951/198955682-e673a073-274c-41ca-acbc-c5f857627abb.png)
 
-5. В ответе присылаем файл [`maven-metadata.xml`](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/9.3/maven-metadata.xml) для этого артефекта
+5. В ответе присылаем файл [maven-metadata.xml](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/9.3/maven-metadata.xml) для этого артефекта
 
 ### Знакомство с Maven
 
@@ -61,12 +61,6 @@
 1. Меняем в `pom.xml` блок с зависимостями под наш артефакт из первого пункта задания для Nexus (java с версией 8_282)
 2. Запускаем команду `mvn package` в директории с `pom.xml`, ожидаем успешного окончания
 3. Проверяем директорию `~/.m2/repository/`, находим наш артефакт
-4. В ответе присылаем исправленный файл `pom.xml`
+4. В ответе присылаем исправленный файл [pom.xml] (https://github.com/AlekseyDrobnyi/netology_devops/blob/main/9.3/pom.xml)
 
----
 
-### Как оформить ДЗ?
-
-Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
-
----
