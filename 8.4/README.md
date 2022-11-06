@@ -19,7 +19,19 @@
    ```
 
 2. При помощи `ansible-galaxy` скачать себе эту роль.
+```bash
+[centos@localhost 8.5]$ ansible-galaxy install -r requirements.yml -f
+
+- clickhouse-role (1.11.0) was installed successfully
+
+- extracting clickhouse-role to /home/centos/.ansible/roles/clickhouse-role
+```
+
 3. Создать новый каталог с ролью при помощи `ansible-galaxy role init vector-role`.
+```bash
+centos@localhost role]$ ansible-galaxy role init vector-role
+- Role vector-role was created successfully
+```
 4. На основе tasks из старого playbook заполните новую role. Разнесите переменные между `vars` и `default`. 
 5. Перенести нужные шаблоны конфигов в `templates`.
 6. Описать в `README.md` обе роли и их параметры.
@@ -29,10 +41,4 @@
 10. Выложите playbook в репозиторий.
 11. В ответ приведите ссылки на оба репозитория с roles и одну ссылку на репозиторий с playbook.
 
----
 
-### Как оформить ДЗ?
-
-Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
-
----
