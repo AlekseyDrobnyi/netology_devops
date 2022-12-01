@@ -1,8 +1,9 @@
 # Домашнее задание к занятию "8.4 Работа с Roles"
 
 ## Подготовка к выполнению
-1. Создайте два пустых публичных репозитория в любом своём проекте: vector-role и lighthouse-role.
+1. Создайте два пустых публичных репозитория в любом своём проекте: [vector-role](https://github.com/AlekseyDrobnyi/vector.git) и [lighthouse-role](https://github.com/AlekseyDrobnyi/lighthouse-role.git).
 2. Добавьте публичную часть своего ключа к своему профилю в github.
+You profile -> settings -> SSH and GPG keys -> New SSH key
 
 ## Основная часть
 
@@ -39,6 +40,8 @@ centos@localhost role]$ ansible-galaxy role init vector-role
 8. Выложите все roles в репозитории. Проставьте тэги, используя семантическую нумерацию Добавьте roles в `requirements.yml` в playbook.
 9. Переработайте playbook на использование roles. Не забудьте про зависимости lighthouse и возможности совмещения `roles` с `tasks`.
 10. Выложите playbook в репозиторий.
-11. В ответ приведите ссылки на оба репозитория с roles и одну ссылку на репозиторий с playbook.
+11. [Vector-role](https://github.com/AlekseyDrobnyi/vector.git)  
+[lighthouse-role](https://github.com/AlekseyDrobnyi/lighthouse-role.git)
+[playbook](https://github.com/AlekseyDrobnyi/netology_devops/tree/main/8.4/playbook)
 
 
