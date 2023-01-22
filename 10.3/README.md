@@ -10,8 +10,11 @@
 
 
 
-- prometheus node-exporter
+- prometheus node-exporter  
 ![image](https://user-images.githubusercontent.com/99823951/213914910-1b97a62e-e8a7-420f-8e59-0ec424bc85c1.png)
+
+![image](https://user-images.githubusercontent.com/99823951/213915160-2a6931ac-110f-4087-8222-9b54ed04374e.png)
+
 
 
 За дополнительными материалами, вы можете обратиться в официальную документацию grafana и prometheus.
