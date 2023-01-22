@@ -6,6 +6,10 @@
 роли источника данных будет выступать prometheus, а сборщиком данных node-exporter:
 - grafana
 - prometheus-server
+![image](https://user-images.githubusercontent.com/99823951/213914539-3d24eeb1-22a0-4f23-942d-76f1ca965068.png)
+
+
+
 - prometheus node-exporter
 
 За дополнительными материалами, вы можете обратиться в официальную документацию grafana и prometheus.
