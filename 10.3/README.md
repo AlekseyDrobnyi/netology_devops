@@ -43,9 +43,8 @@
 ```node_memory_MemFree_bytes{job="prometheus"}```  
 ```node_memory_MemFree_bytes / node_memory_Memtotal_bytes) * 100``` 
 - Количество места на файловой системе  
-```node_filesystem_free_bytes{job="prometheus",mountpoint="/"}```
-```node_filesystem_avail_bytes {fstype=~"ext4|xfs"}```
-```node_filesystem_size_bytes {fstype=~"ext4|xfs"}```
+```node_filesystem_free_bytes{job="prometheus",mountpoint="/"}```  
+```node_filesystem_avail_bytes {fstype=~"ext4|xfs"}``````node_filesystem_size_bytes {fstype=~"ext4|xfs"}```
 
 
 Для решения данного ДЗ приведите promql запросы для выдачи этих метрик, а также скриншот получившейся Dashboard.
