@@ -33,14 +33,24 @@
 - [Understanding Prometheus CPU metrics](https://www.robustperception.io/understanding-machine-cpu-usage)
 
 Создайте Dashboard и в ней создайте следующие Panels:
-- Утилизация CPU для nodeexporter (в процентах, 100-idle)
+- Утилизация CPU для nodeexporter (в процентах, 100-idle)  
 ````100 - (avg by (instance)(rate(node_cpu_seconds_total{job="prometheus",mode="idle"}[5m])) * 100)````
-- CPULA 1/5/15
-- Количество свободной оперативной памяти
-- Количество места на файловой системе
+- CPULA 1/5/15  
+```node_load1{job="prometheus"}```   
+```node_load5{job="prometheus"}```   
+```node_load15{job="prometheus"}```  
+- Количество свободной оперативной памяти  
+```node_memory_MemFree_bytes{job="prometheus"}```  
+```node_memory_MemFree_bytes / node_memory_Memtotal_bytes) * 100``` 
+- Количество места на файловой системе  
+```node_filesystem_free_bytes{job="prometheus",mountpoint="/"}```
+```node_filesystem_avail_bytes {fstype=~"ext4|xfs"}```
+```node_filesystem_size_bytes {fstype=~"ext4|xfs"}```
+
 
 Для решения данного ДЗ приведите promql запросы для выдачи этих метрик, а также скриншот получившейся Dashboard.
-![image](https://user-images.githubusercontent.com/99823951/213989226-96079c01-22dd-4c81-9be4-3e06c7cadf15.png)
+![image](https://user-images.githubusercontent.com/99823951/213990800-8e70dd6e-a3f1-439a-96f2-4ebcc550ff8c.png)
+
 
 
 ## Задание 3
