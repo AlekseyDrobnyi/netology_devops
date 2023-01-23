@@ -4,7 +4,10 @@
 
 **В части задания 1** не используйте директорию [help](https://github.com/AlekseyDrobnyi/netology_devops/tree/main/10.3/help) для сборки проекта, самостоятельно разверните grafana, где в 
 роли источника данных будет выступать prometheus, а сборщиком данных node-exporter:
-- grafana
+- grafana  
+
+![image](https://user-images.githubusercontent.com/99823951/213972209-6070ad5a-f80e-4c9e-803e-cb8840272eb7.png)
+
 - prometheus-server
 ![image](https://user-images.githubusercontent.com/99823951/213914539-3d24eeb1-22a0-4f23-942d-76f1ca965068.png)
 
