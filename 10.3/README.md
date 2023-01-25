@@ -5,7 +5,8 @@
 Не используйте директорию [help](https://github.com/AlekseyDrobnyi/netology_devops/tree/main/10.3/help) для сборки проекта, самостоятельно разверните grafana, где в 
 роли источника данных будет выступать prometheus, а сборщиком данных node-exporter:
 - grafana  
-```ubuntu@ubuntu-VirtualBox:~$ sudo wget https://dl.grafana.com/enterprise/release/grafana-enterprise_9.3.2_amd64.deb  
+```
+ubuntu@ubuntu-VirtualBox:~$ sudo wget https://dl.grafana.com/enterprise/release/grafana-enterprise_9.3.2_amd64.deb  
 ubuntu@ubuntu-VirtualBox:~$ sudo apt install ./grafana-enterprise_9.3.2_amd64.deb  
 Reading package lists... Done 
 ``` 
