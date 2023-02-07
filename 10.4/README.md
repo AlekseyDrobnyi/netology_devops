@@ -40,7 +40,8 @@ Filebeat следует сконфигурировать для отправки
 
 Результатом выполнения данного задания должны быть:
 - скриншот `docker ps` через 5 минут после старта всех контейнеров (их должно быть 5)
-[img](https://user-images.githubusercontent.com/99823951/217149108-1d01ec6a-0a6d-4cf3-a0f8-640e4038de47.png)
+
+![img](https://user-images.githubusercontent.com/99823951/217149108-1d01ec6a-0a6d-4cf3-a0f8-640e4038de47.png)
 - скриншот интерфейса kibana!
 ![img10_04_02 (1)](https://user-images.githubusercontent.com/99823951/217149609-7f51d495-420d-4a73-b1a0-f29dd54e6ed2.png)
 
