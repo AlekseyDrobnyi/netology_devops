@@ -40,6 +40,22 @@ Filebeat следует сконфигурировать для отправки
 
 Результатом выполнения данного задания должны быть:
 - скриншот `docker ps` через 5 минут после старта всех контейнеров (их должно быть 5)
+- Для корректной работы контейнеров пришлось внести правки в конфигурацию:
+в docker-compose.yml
+```
+filebeat:
+    networks:
+      - elastic
+```
+в logstash.conf
+```
+input {
+  beats {
+    port => 5046
+    codec => json
+  }
+}
+```
 
 ![img](https://user-images.githubusercontent.com/99823951/217149108-1d01ec6a-0a6d-4cf3-a0f8-640e4038de47.png)
 - скриншот интерфейса kibana!
