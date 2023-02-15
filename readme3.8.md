@@ -1,3 +1,17 @@
+# Домашнее задание к занятию "Компьютерные сети, лекция 3"
+
+### Цель задания
+
+В результате выполнения этого задания вы:
+
+1. На практике познакомитесь с маршрутизацией в сетях, что позволит понять устройство больших корпоративных сетей и интернета.
+2. Проверите TCP/UDP соединения на хосте (это обычный этап отладки сетевых проблем).
+3. Построите сетевую диаграмму.
+
+------
+
+## Задание
+
 1. Подключитесь к публичному маршрутизатору в интернет. Найдите маршрут к вашему публичному IP   
 ```
 telnet route-views.routeviews.org
@@ -6,7 +20,7 @@ show ip route x.x.x.x/32
 show bgp x.x.x.x/32
 ```  
 
-```
+```bash
 route-views>show ip route 178.187.129.102
 Routing entry for 178.186.0.0/15, supernet
   Known via "bgp 6447", distance 20, metric 0
@@ -189,11 +203,11 @@ Paths: (24 available, best #8, table default)
 ```
 
 2. Создайте dummy0 интерфейс в Ubuntu. Добавьте несколько статических маршрутов. Проверьте таблицу маршрутизации.  
-```
+```bash
 vagrant@vagrant:~$ ip a | grep dummy
 4: dummy0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
 ```
-```
+```bash
 vagrant@vagrant:~$ ip -br route
 default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100
 10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15
@@ -209,7 +223,7 @@ default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100
 ```
 
 3. Проверьте открытые TCP порты в Ubuntu, какие протоколы и приложения используют эти порты? Приведите несколько примеров.
-```
+```bash
 vagrant@vagrant:~$ sudo ss -tnlp
 State    Recv-Q   Send-Q      Local Address:Port       Peer Address:Port   Process
 LISTEN   0        4096        127.0.0.53%lo:53              0.0.0.0:*       users:(("systemd-resolve",pid=619,fd=13))
@@ -219,7 +233,7 @@ LISTEN   0        128                  [::]:22                 [::]:*       user
 53 порт dns, 22 порт ssh  
 
 4. Проверьте используемые UDP сокеты в Ubuntu, какие протоколы и приложения используют эти порты?
-```
+```bash
 vagrant@vagrant:~$ sudo ss -lunp
 State    Recv-Q   Send-Q      Local Address:Port       Peer Address:Port   Process
 UNCONN   0        0           127.0.0.53%lo:53              0.0.0.0:*       users:(("systemd-resolve",pid=619,fd=12))
