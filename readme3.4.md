@@ -1,12 +1,24 @@
-1. На лекции мы познакомились с node_exporter. В демонстрации его исполняемый файл запускался в background. 
-Этого достаточно для демо, но не для настоящей production-системы, где процессы должны находиться под внешним управлением. Используя знания из лекции по systemd, создайте самостоятельно простой unit-файл для node_exporter:
+# Домашнее задание к занятию "Операционные системы. Лекция 2"
 
-поместите его в автозагрузку,
-предусмотрите возможность добавления опций к запускаемому процессу через внешний файл (посмотрите, например, на systemctl cat cron),
-удостоверьтесь, что с помощью systemctl процесс корректно стартует, завершается, а после перезагрузки автоматически поднимается.
+### Цель задания
+
+В результате выполнения этого задания вы:
+1. Познакомитесь со средством сбора метрик node_exporter и средством сбора и визуализации метрик NetData. Такого рода инструменты позволяют выстроить систему мониторинга сервисов для своевременного выявления проблем в их работе.
+2. Построите простой systemd unit файл для создания долгоживущих процессов, которые стартуют вместе со стартом системы автоматически.
+3. Проанализируете dmesg, а именно часть лога старта виртуальной машины, чтобы понять, какая полезная информация может там находиться.
+4. Поработаете с unshare и nsenter для понимания, как создать отдельный namespace для процесса (частичная контейнеризация).
+------
+
+## Задание
+
+1. На лекции мы познакомились с [node_exporter](https://github.com/prometheus/node_exporter/releases). В демонстрации его исполняемый файл запускался в background. Этого достаточно для демо, но не для настоящей production-системы, где процессы должны находиться под внешним управлением. Используя знания из лекции по systemd, создайте самостоятельно простой [unit-файл](https://www.freedesktop.org/software/systemd/man/systemd.service.html) для node_exporter:
+
+    * поместите его в автозагрузку,
+    * предусмотрите возможность добавления опций к запускаемому процессу через внешний файл (посмотрите, например, на `systemctl cat cron`),
+    * удостоверьтесь, что с помощью systemctl процесс корректно стартует, завершается, а после перезагрузки автоматически поднимается.
 
 файл создал:
-
+```bash 
 vagrant@vagrant:~$ sudo cat /usr/lib/systemd/system/node_exporter.service
 [Unit]
 Description=Prometheus Node Exporter
@@ -19,9 +31,9 @@ WantedBy=multi-user.target
 
 vagrant@vagrant:~$ sudo cat /etc/default/node_exporter
 OPTIONS=""
-
+```  
 проверил запуск/перезапуск/рестарт:
-
+```bash 
 vagrant@vagrant:~$ ps -e | grep node
    1969 ?        00:00:00 node_exporter
 vagrant@vagrant:~$ systemctl stop node_exporter
@@ -41,22 +53,18 @@ vagrant@vagrant:~$ ps -e | grep node
    2107 ?        00:00:00 node_exporter
 vagrant@vagrant:~$ systemctl restart node_exporter
 ==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
+```
 
-
-
-
-
-
-Задание 1
 Предлагаю уточнить как именно в службу будут передаваться дополнительные опции. 
 
 в разделе [Service] я в файле readme не указал переменную, на которую ссылаться будет служба при запуске. 
-ExecStart=/usr/local/bin/node_exporter  $OPTIONS
-EnvironmentFile=/etc/default/node_exporter - а тут разместил сам файл с опциями.
-
+`ExecStart=/usr/local/bin/node_exporter  $OPTIONS`
+`EnvironmentFile=/etc/default/node_exporter` - а тут разместил сам файл с опциями.
+```bash 
 vagrant@vagrant:~$ sudo cat /etc/default/node_exporter
 OPTIONS = --collector.cpu.guest --collector.cpu.info
-
+```
+```bash 
 vagrant@vagrant:~$ systemctl status node_exporter.service
 ● node_exporter.service - Prometheus Node Exporter
      Loaded: loaded (/lib/systemd/system/node_exporter.service; enabled; vendor preset: enabled)
@@ -67,40 +75,38 @@ vagrant@vagrant:~$ systemctl status node_exporter.service
      Memory: 2.3M
      CGroup: /system.slice/node_exporter.service
              └─2190 /usr/local/bin/node_exporter --collector.cpu.guest --collector.cpu.info
+```
 
 
-
-
-
-
-
-
-
-2. Ознакомьтесь с опциями node_exporter и выводом /metrics по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
+1. Ознакомьтесь с опциями node_exporter и выводом `/metrics` по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
 
 запустил и ознакомился с метриками - curl http://localhost:9100/metrics
 
 для CPU: 
+```
 node_cpu_seconds_total{cpu="0",mode="system"} 9.66
 node_cpu_seconds_total{cpu="0",mode="user"} 5.75
 node_cpu_seconds_total{cpu="1",mode="idle"} 1555.77
-
+```
 memory:
+```
 node_memory_MemTotal_bytes Memory information field MemTotal_bytes.
 node_memory_MemFree_bytes Memory information field MemFree_bytes.
-
+```
 disk:
+```
 node_disk_write_time_seconds_total This is the total number of seconds spent by all writes.
 node_disk_read_time_seconds_total The total number of seconds spent by all reads.
 node_disk_read_bytes_total The total number of bytes read successfully.
 node_disk_io_time_seconds_total Total seconds spent doing I/Os.
-
+```
 network:
+```
 node_network_transmit_errs_total Network device statistic transmit_errs.
 node_network_transmit_bytes_total Network device statistic transmit_bytes.
 node_network_receive_errs_total Network device statistic receive_errs.
 node_network_receive_bytes_total Network device statistic receive_bytes.
-
+```
 
 3. Установите в свою виртуальную машину Netdata. Воспользуйтесь готовыми пакетами для установки (sudo apt install -y netdata). После успешной установки:
 ![image](https://user-images.githubusercontent.com/99823951/161235048-f8be5646-ba98-4538-b696-43cbc2db9c49.png)
