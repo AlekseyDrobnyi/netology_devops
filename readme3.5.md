@@ -1,11 +1,23 @@
-Домашнее задание к занятию "3.5. Файловые системы"  
-1. Узнайте о sparse (разряженных) файлах.  
-почитал
+# Домашнее задание к занятию "Файловые системы"
+
+### Цель задания
+
+В результате выполнения этого задания вы: 
+
+1. Научитесь работать с инструментами разметки жестких дисков, виртуальных разделов - RAID массивами и логическими томами, конфигурациями файловых систем. Основная задача - понять, какие слои абстракций могут нас отделять от файловой системы до железа. Обычно инженер инфраструктуры не сталкивается напрямую с настройкой LVM или RAID, но иметь понимание, как это работает - необходимо.
+1. Создадите нештатную ситуацию работы жестких дисков и поймете, как система RAID обеспечивает отказоустойчивую работу.
+
+------
+
+## Задание
+
+1. Узнайте о [sparse](https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D0%B7%D1%80%D0%B5%D0%B6%D1%91%D0%BD%D0%BD%D1%8B%D0%B9_%D1%84%D0%B0%D0%B9%D0%BB) (разряженных) файлах.  
+почитал  
 
 2. Могут ли файлы, являющиеся жесткой ссылкой на один объект, иметь разные права доступа и владельца? Почему?  
 
 Жесткая ссылка и файл, для которой она создавалась имеют одинаковые inode. Поэтому жесткая ссылка имеет те же права доступа, владельца и время последней модификации, что и целевой файл.   
-
+```bash
 vagrant@vagrant:~$ ln text.txt tesl_link  
 vagrant@vagrant:~$ ls -ilh  
 total 0  
@@ -18,9 +30,10 @@ vagrant@vagrant:~$ ls -ilh
 total 0
 1048605 ---------- 2 vagrant vagrant 0 Apr  6 04:55 tesl_link  
 1048605 ---------- 2 vagrant vagrant 0 Apr  6 04:55 text.txt  
+```
 
-3. Сделайте vagrant destroy на имеющийся инстанс Ubuntu. Замените содержимое Vagrantfile следующим:
-
+3. Сделайте `vagrant destroy` на имеющийся инстанс Ubuntu. Замените содержимое Vagrantfile следующим:
+```bash
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-20.04"  
   config.vm.provider :virtualbox do |vb|  
@@ -32,9 +45,10 @@ Vagrant.configure("2") do |config|
     vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 2, '--device', 0, '--type', 'hdd', '--medium', lvm_experiments_disk1_path]  
   end  
 end  
+```
 Данная конфигурация создаст новую виртуальную машину с двумя дополнительными неразмеченными дисками по 2.5 Гб.  
 Выполнил  
-
+```bash
 vagrant@vagrant:~$ lsblk  
 NAME                      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT  
 loop0                       7:0    0 55.4M  1 loop /snap/core18/2128  
@@ -50,10 +64,11 @@ sda                         8:0    0   64G  0 disk
   └─ubuntu--vg-ubuntu--lv 253:0    0 31.5G  0 lvm  /  
 sdb                         8:16   0  2.5G  0 disk  
 sdc                         8:32   0  2.5G  0 disk  
+```
 
-4. Используя fdisk, разбейте первый диск на 2 раздела: 2 Гб, оставшееся пространство.  
+4. Используя `fdisk`, разбейте первый диск на 2 раздела: 2 Гб, оставшееся пространство.  
 разбил раздел, пользовался ключами m(помощь), p(посмотреть разделы), n(создать раздел), w(сохранить и выйти):  
-
+```bash
 vagrant@vagrant:~$ sudo fdisk -l /dev/sdb  
 Disk /dev/sdb: 2.51 GiB, 2684354560 bytes, 5242880 sectors  
 Disk model: VBOX HARDDISK  
@@ -66,10 +81,10 @@ Disk identifier: 0x4f342fac
 Device     Boot   Start     End Sectors  Size Id Type  
 /dev/sdb1          2048 4196351 4194304    2G  5 Linux  
 /dev/sdb2       4196352 5242879 1046528  511M 83 Linux  
+```
 
-
-5. Используя sfdisk, перенесите данную таблицу разделов на второй диск.
-
+5. Используя `sfdisk`, перенесите данную таблицу разделов на второй диск.
+```bash
 vagrant@vagrant:~$ sudo -i  
 
 root@vagrant:~# sfdisk -d /dev/sdb | sfdisk --force /dev/sdc  
@@ -102,9 +117,9 @@ The partition table has been altered.
 Calling ioctl() to re-read partition table.  
 Syncing disks.  
 root@vagrant:~#  
-
-проверяем sudo sfdisk -l  
-
+```
+проверяем `sudo sfdisk -l `
+```bash
 Disk /dev/sdb: 2.51 GiB, 2684354560 bytes, 5242880 sectors  
 Disk model: VBOX HARDDISK  
 Units: sectors of 1 * 512 = 512 bytes  
@@ -129,10 +144,10 @@ Disk identifier: 0x4f342fac
 Device     Boot   Start     End Sectors  Size Id Type  
 /dev/sdc1          2048 4196351 4194304    2G 83 Linux  
 /dev/sdc2       4196352 5242879 1046528  511M 83 Linux  
+```
 
-
-6. Соберите mdadm RAID1 на паре разделов 2 Гб.  
-
+6. Соберите `mdadm` `RAID1` на паре разделов 2 Гб.  
+```bash
 root@vagrant:~# mdadm --create --verbose /dev/md0 -l1 -n 2 /dev/sd{b1,c1}  
 mdadm: Note: this array has metadata at the start and  
     may not be suitable as a boot device.  If you plan to
@@ -143,9 +158,9 @@ mdadm: size set to 2094080K
 Continue creating array? y  
 mdadm: Defaulting to version 1.2 metadata  
 mdadm: array /dev/md0 started.  
-
-проверяем  lsblk:  
-
+```
+проверяем  `lsblk`:  
+```bash
 sdb                         8:16   0  2.5G  0 disk  
 ├─sdb1                      8:17   0    2G  0 part  
 │ └─md0                     9:0    0    2G  0 raid1  
@@ -154,11 +169,12 @@ sdc                         8:32   0  2.5G  0 disk
 ├─sdc1                      8:33   0    2G  0 part  
 │ └─md0                     9:0    0    2G  0 raid1  
 └─sdc2                      8:34   0  511M  0 part  
+```
 
-7. Соберите mdadm RAID0 на второй паре маленьких разделов.  
+7. Соберите `mdadm` `RAID0` на второй паре маленьких разделов.  
 
-почему-то при создании raid0 не было опроса Y/N на подтверждение. Сразу произошло создание.  
-
+почему-то при создании `raid0` не было опроса Y/N на подтверждение. Сразу произошло создание.  
+```bash
 root@vagrant:~# mdadm --create --verbose /dev/md1 -l 0 -n 2 /dev/sd{b2,c2}  
 mdadm: chunk size defaults to 512K  
 mdadm: Defaulting to version 1.2 metadata  
@@ -174,9 +190,10 @@ sdc                         8:32   0  2.5G  0 disk
 │ └─md0                     9:0    0    2G  0 raid1  
 └─sdc2                      8:34   0  511M  0 part  
   └─md1                     9:1    0 1018M  0 raid0  
+```
 
 8. Создайте 2 независимых PV на получившихся md-устройствах.  
-
+```bash
 root@vagrant:~# pvcreate /dev/md0 /dev/md1  
   Physical volume "/dev/md0" successfully created.  
   Physical volume "/dev/md1" successfully created.  
@@ -214,9 +231,10 @@ root@vagrant:~# pvcreate /dev/md0 /dev/md1
   Free PE               254  
   Allocated PE          0  
   PV UUID               HRuXG4-wjcD-d04Y-7zzo-rUu9-H6OA-X3cQcH  
+```
 
 9. Создайте общую volume-group на этих двух PV.  
-
+```bash
 root@vagrant:~# vgcreate vg01 /dev/md0 /dev/md1  
   Volume group "vg01" successfully created  
   
@@ -262,10 +280,10 @@ root@vagrant:~# vgcreate vg01 /dev/md0 /dev/md1
   Alloc PE / Size       0 / 0  
   Free  PE / Size       765 / <2.99 GiB  
   VG UUID               kVU9JD-GEix-2IL5-ivt8-Gl6j-vnQJ-HaZe4I  
-  
+```
 
-10. Создайте LV размером 100 Мб, указав его расположение на PV с RAID0.  
-
+10. Создайте LV размером 100 Мб, указав его расположение на PV с `RAID0`.  
+```bash
 root@vagrant:~# lvcreate -L 100 vg01 /dev/md1  
   Logical volume "lvol0" created.  
  
@@ -273,9 +291,10 @@ root@vagrant:~# lvs
   LV        VG        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert  
   ubuntu-lv ubuntu-vg -wi-ao----  31.50g  
   lvol0     vg01      -wi-a----- 100.00m  
+```
 
-11. Создайте mkfs.ext4 ФС на получившемся LV.  
-
+11. Создайте `mkfs.ext4` ФС на получившемся LV.  
+```bash
 root@vagrant:~# mkfs.ext4 /dev/vg01/lvol0  
 mke2fs 1.45.5 (07-Jan-2020)  
 Creating filesystem with 25600 4k blocks and 25600 inodes  
@@ -284,16 +303,17 @@ Allocating group tables: done
 Writing inode tables: done  
 Creating journal (1024 blocks): done  
 Writing superblocks and filesystem accounting information: done  
+```
 
-
-12. Смонтируйте этот раздел в любую директорию, например, /tmp/new.  
-
+12. Смонтируйте этот раздел в любую директорию, например, `/tmp/new`.  
+```bash
 root@vagrant:~# mkdir /tmp/new  
 
 root@vagrant:~# mount /dev/vg01/lvol0 /tmp/new  
+```
 
-13. Поместите туда тестовый файл, например wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz.  
-
+13. Поместите туда тестовый файл, например`wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz`.  
+```bash
 root@vagrant:~# wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz  
 --2022-04-06 04:26:08--  https://mirror.yandex.ru/ubuntu/ls-lR.gz  
 Resolving mirror.yandex.ru (mirror.yandex.ru)... 213.180.204.183, 2a02:6b8::183  
@@ -310,13 +330,13 @@ root@vagrant:~# ls -l /tmp/new
 total 21876  
 drwx------ 2 root root    16384 Apr  6 04:04 lost+found  
 -rw-r--r-- 1 root root 22383592 Apr  6 03:58 test.gz  
+```
 
 
 
 
-
-14. Прикрепите вывод lsblk.
-
+14. Прикрепите вывод `lsblk`.
+```bash
 root@vagrant:~# lsblk
 NAME                      MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT  
 loop0                       7:0    0 55.4M  1 loop  /snap/core18/2128  
@@ -342,18 +362,19 @@ sdb                         8:16   0  2.5G  0 disk
 └─sdc2                      8:34   0  511M  0 part  
   └─md1                     9:1    0 1018M  0 raid0  
    └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new  
-
+```
 
 15. Протестируйте целостность файла:  
 проверил:  
-
+```bash
 root@vagrant:~# gzip -t /tmp/new/test.gz  
 
 root@vagrant:~# echo $?  
 0  
+```
 
-16. Используя pvmove, переместите содержимое PV с RAID0 на RAID1.  
-
+16. Используя `pvmove`, переместите содержимое PV с RAID0 на RAID1.  
+```bash
 root@vagrant:~# pvmove /dev/md1  
   /dev/md1: Moved: 12.00%  
   /dev/md1: Moved: 100.00%  
@@ -375,9 +396,10 @@ sdc                         8:32   0  2.5G  0 disk
 │   └─vg01-lvol0          253:1    0  100M  0 lvm   /tmp/new  
 └─sdc2                      8:34   0  511M  0 part  
   └─md1                     9:1    0 1018M  0 raid0  
+```
 
-17. Сделайте --fail на устройство в вашем RAID1 md.  
-
+17. Сделайте `--fail` на устройство в вашем RAID1 md.  
+```bash
 root@vagrant:~# mdadm /dev/md0 --fail /dev/sdb1  
 mdadm: set /dev/sdb1 faulty in /dev/md0  
 
@@ -408,9 +430,10 @@ Consistency Policy : resync
        -       0        0        0      removed  
        1       8       33        1      active sync   /dev/sdc1  
        0       8       17        -      faulty   /dev/sdb1  
+```
 
 18. Подтвердите выводом dmesg, что RAID1 работает в деградированном состоянии.  
-
+```bash
 root@vagrant:~# dmesg | grep md0  
 [ 4329.174431] md/raid1:md0: not clean -- starting background reconstruction  
 [ 4329.174432] md/raid1:md0: active with 2 out of 2 mirrors  
@@ -419,16 +442,21 @@ root@vagrant:~# dmesg | grep md0
 [ 4339.859419] md: md0: resync done.  
 [ 8753.390042] md/raid1:md0: Disk failure on sdb1, disabling device.  
                md/raid1:md0: Operation continuing on 1 devices.  
+```
 
 19. Протестируйте целостность файла, несмотря на "сбойный" диск он должен продолжать быть доступен:  
 
-Проверил: root@vagrant:~# gzip -t /tmp/new/test.gz && echo $?  
+Проверил:
+```bash
+root@vagrant:~# gzip -t /tmp/new/test.gz && echo $?  
 0  
+```
 
-20. Погасите тестовый хост, vagrant destroy.  
-
+20. Погасите тестовый хост, `vagrant destroy`.  
+```bash
 Алексей@DESKTOP-8UA2JLC MINGW64 ~/desktop/devops/systemadm (master)  
 $ vagrant destroy  
     default: Are you sure you want to destroy the 'default' VM? [y/N] y  
 ==> default: Forcing shutdown of VM...  
 ==> default: Destroying VM and associated drives...  
+```
