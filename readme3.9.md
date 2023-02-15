@@ -1,4 +1,20 @@
+# Домашнее задание к занятию "Элементы безопасности информационных систем"
+
+
+### Цель задания
+В результате выполнения этого задания вы: 
+
+1. Настроите парольный менеджер, что позволит не использовать один и тот же пароль на все ресурсы и удобно работать с множеством паролей.
+2. Настроите веб-сервер на работу с https. Сегодня https является стандартом в интернете. Понимание сути работы центра сертификации, цепочки сертификатов позволит понять, на чем основывается https протокол.
+3. Сконфигурируете ssh клиент на работу с разными серверами по-разному, что дает большую гибкость ssh соединений. Например, к некоторым серверам мы можем обращаться по ssh через приложения, где недоступен ввод пароля.
+4. Поработаете со сбором и анализом трафика, которые необходимы для отладки сетевых проблем
+
+------
+
+## Задание
+
 1. Установите Bitwarden плагин для браузера. Зарегестрируйтесь и сохраните несколько паролей.  
+
 ![Снимок экрана 2022-05-07 091921](https://user-images.githubusercontent.com/99823951/167234132-8e8c3bdb-84e4-48be-b862-9aee8c24ace3.jpg)
 
 
@@ -7,7 +23,7 @@
 ![image](https://user-images.githubusercontent.com/99823951/167234721-d02975a4-bd6b-44d3-a566-a5c305f8054a.png)
 
 3. Установите apache2, сгенерируйте самоподписанный сертификат, настройте тестовый сайт для работы по HTTPS.  
-```
+```bash
 vagrant@vagrant:~$ sudo systemctl status apache2
 ● apache2.service - The Apache HTTP Server
      Loaded: loaded (/lib/systemd/system/apache2.service; enabled; vendor preset: enabled)
@@ -26,7 +42,7 @@ May 07 03:11:46 vagrant systemd[1]: Starting The Apache HTTP Server...
 May 07 03:11:46 vagrant apachectl[4314]: AH00558: apache2: Could not reliably determine the server's fully qualified do>
 May 07 03:11:46 vagrant systemd[1]: Started The Apache HTTP Server.
 ```
-```
+```bash
 vagrant@vagrant:~$ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.k
 ey -out /etc/ssl/certs/apache-selfsigned.crt -subj "/C=RU/ST=Moscow/L=Moscow/O=Company Name/OU=Org/CN=10.0.2.15"
 Generating a RSA private key
@@ -35,7 +51,7 @@ Generating a RSA private key
 writing new private key to '/etc/ssl/private/apache-selfsigned.key'
 -----
 ```
-```
+```bash
 vagrant@vagrant:~$ sudo mkdir /var/www/10.0.2.15
 vagrant@vagrant:~$ sudo nano var/www/10.0.2.15/index.html
 vagrant@vagrant:~$ ls /var/www/
@@ -77,7 +93,7 @@ vagrant@vagrant:~$ curl 10.0.2.15
 </html>
 ```
 
-```
+```bash
 vagrant@vagrant:~$ curl --insecure -v https://10.0.2.15
 *   Trying 10.0.2.15:443...
 * TCP_NODELAY set
@@ -129,7 +145,7 @@ vagrant@vagrant:~$ curl --insecure -v https://10.0.2.15
 
 4. Проверьте на TLS уязвимости произвольный сайт в интернете (кроме сайтов МВД, ФСБ, МинОбр, НацБанк, РосКосмос, 
 РосАтом, РосНАНО и любых госкомпаний, объектов КИИ, ВПК ... и тому подобное).  
-```
+```bash
 vagrant@vagrant:~/testssl.sh$ ./testssl.sh -U --sneaky https://netology.ru/
  Testing vulnerabilities
 
@@ -143,7 +159,7 @@ vagrant@vagrant:~/testssl.sh$ ./testssl.sh -U --sneaky https://netology.ru/
 ```
 
 5. Установите на Ubuntu ssh сервер, сгенерируйте новый приватный ключ. Скопируйте свой публичный ключ на другой сервер. Подключитесь к серверу по SSH-ключу.  
-```
+```bash
 vagrant@vagrant:~$ systemctl status sshd.service
 ● ssh.service - OpenBSD Secure Shell server
      Loaded: loaded (/lib/systemd/system/ssh.service; enabled; vendor preset: enabled)
@@ -156,7 +172,7 @@ vagrant@vagrant:~$ systemctl status sshd.service
      CGroup: /system.slice/ssh.service
              └─693 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
 ```             
-```
+```bash
 vagrant@vagrant:~$ ssh-keygen
 Generating public/private rsa key pair.
 Enter file in which to save the key (/home/vagrant/.ssh/id_rsa):
@@ -181,7 +197,7 @@ The key's randomart image is:
 |   oo+o .     .  |
 +----[SHA256]-----+
 ```
-```
+```bash
 vagrant@vagrant:~$ ssh-copy-id vagrant@10.0.3.15
 /usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/vagrant/.ssh/id_rsa.pub"
 The authenticity of host '10.0.3.15 (10.0.3.15)' can't be established.
@@ -218,7 +234,7 @@ Last login: Thu May 12 02:06:40 2022 from 10.0.2.2
              
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH клиента, так чтобы вход на удаленный сервер осуществлялся по имени сервера.  
 
-```
+```bash
 vagrant@vagrant:~$ ls /home/vagrant/.ssh
 authorized_keys  id_rsa  id_rsa.pub  known_hosts
 vagrant@vagrant:~$ mv /home/vagrant/.ssh/id_rsa /home/vagrant/.ssh/vagrant2_rsa
@@ -252,14 +268,14 @@ Last login: Thu May 12 02:18:01 2022 from 10.0.3.15
 ```
 8. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.  
 
-```
+```bash
 vagrant@vagrant:~$ sudo tcpdump -c 100 -w 22.pcap
 tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
 100 packets captured
 102 packets received by filter
 0 packets dropped by kernel
 ```
-```
+```bash
 vagrant@vagrant:~$ sudo tshark -r 22.pcap
 Running as user "root" and group "root". This could be dangerous.
     1   0.000000    10.0.2.15 → 10.0.2.2     SSH 98 Server: Encrypted packet (len=44)
