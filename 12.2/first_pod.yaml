@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: netology
+spec:
+  containers:
+  - image: gcr.io/kubernetes-e2e-test-images/echoserver:2.2
+    name: nginx
+    ports:
+    -  containerPort: 80
