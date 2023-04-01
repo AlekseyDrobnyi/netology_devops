@@ -25,7 +25,7 @@
 ### Задание 1. Создать Deployment и обеспечить доступ к репликам приложения из другого Pod
 
 1. Создать Deployment приложения, состоящего из двух контейнеров — nginx и multitool. Решить возникшую ошибку.  
-Deployment [создал](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/multitool.yaml) Но ошибку так и не смог решить.
+Deployment [создал](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/yml/multitool.yaml) но ошибку так и не смог решить.
 Написал в чат в Discord-e, пока ожидаю помощи. Так и не смог победить конфликт портов. Или просто не понял в чем проблема
 ![image](https://user-images.githubusercontent.com/99823951/229312398-421ed9f8-8587-4806-b855-a7f7661e85c8.png)
 
@@ -54,7 +54,7 @@ multitool-949f57789-6frbd   1/1     Running   0          4s
 ```
 
 4. Создать Service, который обеспечит доступ до реплик приложений из п.1.  
-Создал сервис [svc](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/service_multitool.yaml)
+Создал сервис [svc](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/yml/service_multitool.yaml)
 ```bash
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl apply -f service_multitool.yaml
 service/svcmultitool created
@@ -65,7 +65,7 @@ kubernetes     ClusterIP   10.152.183.1     <none>        443/TCP   9h
 svcmultitool   ClusterIP   10.152.183.251   <none>        80/TCP    7s
 ```
 5. Создать отдельный Pod с приложением multitool и убедиться с помощью `curl`, что из пода есть доступ до приложений из п.1.  
-Создал [pod](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/multitoolPod.yaml)
+Создал [pod](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/yml/multitoolPod.yaml)
 ```bash
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl apply -f multitoolPod.yaml
 pod/multitool created
@@ -111,7 +111,7 @@ Commercial support is available at
 
 1. Создать Deployment приложения nginx и обеспечить старт контейнера только после того, как будет запущен сервис этого приложения.  
 2. Убедиться, что nginx не стартует. В качестве Init-контейнера взять busybox.  
-[Deployment](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/Deployment.yaml)
+[Deployment](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/yml/Deployment.yaml)
 ```bash
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl get all
 NAME            READY   STATUS    RESTARTS        AGE
@@ -140,7 +140,7 @@ nginx-d5c65877c-c556j   0/1     Init:0/1   0             10s
 
 
 3. Создать и запустить Service. Убедиться, что Init запустился.  
-[svc](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/service_nginx.yaml)  
+[svc](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/yml/service_nginx.yaml)  
 4. Продемонстрировать состояние пода до и после запуска сервиса.  
 
 ```bash
