@@ -1,0 +1,108 @@
+# Домашнее задание к занятию «Базовые объекты K8S»
+
+### Цель задания
+
+В тестовой среде для работы с Kubernetes, установленной в предыдущем ДЗ, необходимо развернуть Pod с приложением и подключиться к нему со своего локального компьютера. 
+
+------
+
+### Чеклист готовности к домашнему заданию
+
+1. Установленное k8s-решение (например, MicroK8S).
+2. Установленный локальный kubectl.
+3. Редактор YAML-файлов с подключенным Git-репозиторием.
+
+------
+
+### Инструменты и дополнительные материалы, которые пригодятся для выполнения задания
+
+1. Описание [Pod](https://kubernetes.io/docs/concepts/workloads/pods/) и примеры манифестов.
+2. Описание [Service](https://kubernetes.io/docs/concepts/services-networking/service/).
+
+------
+
+### Задание 1. Создать Pod с именем hello-world
+
+1. Создать манифест (yaml-конфигурацию) Pod. 
+[Создал](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.2/first_pod.yaml)
+2. Использовать image - gcr.io/kubernetes-e2e-test-images/echoserver:2.2.
+3. Подключиться локально к Pod с помощью `kubectl port-forward` и вывести значение (curl или в браузере).  
+Манифест собрал, поднял Pod. Статус - `Running`. Но при проброски порта ничего не отображается, а сам проброc "отваливается"
+
+```bash
+ubuntu@ubuntu-VirtualBox:~$ kubectl apply -f ~/.kube/first_pod.yaml
+pod/netology created
+```
+```bash
+ubuntu@ubuntu-VirtualBox:~$ kubectl get pod
+NAME       READY   STATUS    RESTARTS   AGE
+nginx      1/1     Running   0          54m
+netology   1/1     Running   0          35m
+qwer       1/1     Running   0          6m47s
+
+ubuntu@ubuntu-VirtualBox:~$ kubectl port-forward netology 30080:80
+Forwarding from 127.0.0.1:30080 -> 80
+Forwarding from [::1]:30080 -> 80
+Handling connection for 30080
+
+
+```
+![image](https://user-images.githubusercontent.com/99823951/225023589-f54dc50a-432c-43c1-b2ce-61c0c588df40.png)
+
+Ради теста и возможности "пощупать" подключение к Pod-у, поправил манифест на простой `nginx`. 
+`port-forward` отлично отработал, стартовую страницу nginx увидел
+```
+  containers:
+  - image: nginx:latest
+```
+
+![image](https://user-images.githubusercontent.com/99823951/225020658-df576039-3b76-40bd-b70f-c8505943e460.png)
+
+------
+
+### Задание 2. Создать Service и подключить его к Pod
+
+1. Создать Pod с именем netology-web.
+2. Использовать image — gcr.io/kubernetes-e2e-test-images/echoserver:2.2.
+3. Создать Service с именем netology-svc и подключить к netology-web.  
+Написал манифект для [Service](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.2/first_svc.yaml)
+```bash
+ubuntu@ubuntu-VirtualBox:~$ kubectl apply -f ~/.kube/first_svc.yaml
+service/netologysvc created
+```
+Проставил Pod-у `netology` соответствующий label, чтобы связать с Service  
+```
+ubuntu@ubuntu-VirtualBox:~$ kubectl label pods netology  app=netology
+pod/netology labeled
+```
+Но при попытке поднять порт, ошибка такая же
+![image](https://user-images.githubusercontent.com/99823951/225021022-3a2f4814-8594-4265-a160-370b876361fc.png)
+Ради интереса создал другой сервис `svcnginxx` и связал его с Pod-ом `qwer`, в котором крутится простой nginx  
+```
+ubuntu@ubuntu-VirtualBox:~$ kubectl get service
+NAME          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+kubernetes    ClusterIP   10.152.183.1    <none>        443/TCP   3h39m
+netologysvc   ClusterIP   10.152.183.44   <none>        80/TCP    21m
+svcnginxx     ClusterIP   10.152.183.99   <none>        80/TCP    11s
+```
+5. Подключиться локально к Service с помощью `kubectl port-forward` и вывести значение (curl или в браузере).
+![image](https://user-images.githubusercontent.com/99823951/225030321-6dfd4c3b-a4e3-4c4e-a21a-b80c26b4ea7f.png)
+
+Результат в итоге не однозначный.
+Подключаться научился, связывать Pod-ы и Servic-ы тоже.
+Проблема в образе `gcr.io/kubernetes-e2e-test-images/echoserver:2.2` ? или для него нужна еще какая доработка, чтобы в браузере выводилось что-нибудь.
+
+------
+
+### Правила приёма работы
+
+1. Домашняя работа оформляется в своем Git-репозитории в файле README.md. Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
+2. Файл README.md должен содержать скриншоты вывода команд `kubectl get pods`, а также скриншот результата подключения.
+3. Репозиторий должен содержать файлы манифестов и ссылки на них в файле README.md.
+
+------
+
+### Критерии оценки
+Зачёт — выполнены все задания, ответы даны в развернутой форме, приложены соответствующие скриншоты и файлы проекта, в выполненных заданиях нет противоречий и нарушения логики.
+
+На доработку — задание выполнено частично или не выполнено, в логике выполнения заданий есть противоречия, существенные недостатки.
