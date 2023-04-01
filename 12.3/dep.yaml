@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: first-deployment
+spec:
+  replicas: 1
+  selector:
+   matchLabels:
+     app: main
+  template:
+    metadata:
+      labels:
+        app: main
+    spec:
+      containers:
+      - image: wbitt/network-multitool
+        imagePullPolicy: IfNotPresent
+        name: multitool
+        env:
+      - image: nginx:latest
+        imagePullPolicy: IfNotPresent
+        name: nginx
+
+
+
