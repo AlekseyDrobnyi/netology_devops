@@ -19,12 +19,11 @@ spec:
         image: nginx:1.19
         ports:
         - containerPort: 80
-          hostPort: 80
       - name: multitool
         image: wbitt/network-multitool     
         ports:
         - containerPort: 8080             
-          hostPort: 8081
+
 
 
 
