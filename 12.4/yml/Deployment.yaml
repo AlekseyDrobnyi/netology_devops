@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: multi
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi  
+  template:
+    metadata:
+      labels:
+        app: multi
+    spec:
+      containers:
+      - image: nginx:latest
+        name: nginx
+        ports:
+        - containerPort: 80
+      initContainers:
+      - image: busybox:1.28
+        name: init
+        command: ['sh', '-c', "until nslookup svcnginx.default.svc.cluster.local; do echo waiting for service; sleep 5; done;"]
+      restartPolicy: Always
+
+
