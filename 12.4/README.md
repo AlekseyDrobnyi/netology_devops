@@ -86,6 +86,8 @@ Commercial support is available at
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100   612  100   612    0     0  1025k      0 --:--:-- --:--:-- --:--:--  597k
+
+
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl exec multitool -- curl 10.152.183.227:9002
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
@@ -93,7 +95,7 @@ ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl exec multitool -- curl 10.152.183.227:
 100   145  100   145    0     0  13680      0 --:--:-- --:--:-- --:--:-- 14500
 ```
 4. Продемонстрировать доступ с помощью `curl` по доменному имени сервиса.  
-Тоже самое произвожу но уже по DNS именни Servic-a
+Тоже самое произвожу, но уже по DNS имени Servic-a
 ```bash
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl exec multitool -- curl svcmulti.default.svc.cluster.local:9001
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
