@@ -26,7 +26,7 @@
 
 1. Создать Deployment приложения, состоящего из двух контейнеров — nginx и multitool. Решить возникшую ошибку.  
 Deployment [создал](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/yml/multitool.yaml)  
-Ошибку исправил, переопределив порть для multitool-a на `1180` и `11443`  
+Ошибку исправил, переопределив порты для multitool-a на `1180` и `11443`  
 Deployment успешно создается, replic-и успешно получается увеличивать.
 ```bash
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl get pods
@@ -89,13 +89,13 @@ svcmultitool   ClusterIP   10.152.183.251   <none>        80/TCP    7s
 ```
 5. Создать отдельный Pod с приложением multitool и убедиться с помощью `curl`, что из пода есть доступ до приложений из п.1.  
 Создал [pod](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/yml/multitoolPod.yaml)
-Получили хоть какой-то, но ответ. Вероятно ошибся где-то уже в часом конфиге nginx-a. Но `curl` отработал
+Получили ответ. 
 ```bash
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl get pods
 NAME                         READY   STATUS    RESTARTS   AGE
-multitool                    1/1     Running   0          5h36m
-multitool-86b94869bc-xnbrf   2/2     Running   0          2m35s
-multitool-86b94869bc-v86qr   2/2     Running   0          6s
+multitool                    1/1     Running   0          5h40m
+multitool-86b94869bc-xnbrf   2/2     Running   0          7m
+multitool-86b94869bc-v86qr   2/2     Running   0          5m13s
 
 
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl exec multitool -- curl 10.152.183.227
