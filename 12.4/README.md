@@ -27,9 +27,9 @@
 1. Создать Deployment приложения, состоящего из двух контейнеров (nginx и multitool), с количеством реплик 3 шт.  
 [Deployment](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.4/yml/multitool.yaml)
 2. Создать Service, который обеспечит доступ внутри кластера до контейнеров приложения из п.1 по порту 9001 — nginx 80, по 9002 — multitool 8080.  
-[Service](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.4/yml/service_multitool.yaml)
+[Service](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.4/yml/service_multitool.yaml)  
 Поднял 3 реплики приложения с nginx и multitool.  
-Добавил в [Service](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.4/yml/service_multitool.yaml) из предыдущих заданий значения `port` и `targetPort` для перенаправления трафика по портам.  
+Добавил в Service значения `port` и `targetPort` для перенаправления трафика по портам.  
 ```bash
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl apply -f service_multitool.yaml
 service/svcmulti configured
