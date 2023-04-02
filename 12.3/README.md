@@ -26,8 +26,8 @@
 
 1. Создать Deployment приложения, состоящего из двух контейнеров — nginx и multitool. Решить возникшую ошибку.  
 Deployment [создал](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/yml/multitool.yaml) 
-Ошибку удалось обойти только созданием `kubectl create configmap` и монтированием путей, что запрашивал multitool
-в итоге повесил multitool на 80 порта, nginx на 81
+Ошибку удалось обойти только созданием `kubectl create configmap` и монтированием путей, что запрашивал multitool  
+в итоге повесил multitool на 80 порт, а nginx на 81  
 Deployment успешно создается, replic-и успешно получается увеличивать.
 ```bash
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl describe pods multitool-9698bbc54-cztkd
