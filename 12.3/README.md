@@ -25,49 +25,31 @@
 ### Задание 1. Создать Deployment и обеспечить доступ к репликам приложения из другого Pod
 
 1. Создать Deployment приложения, состоящего из двух контейнеров — nginx и multitool. Решить возникшую ошибку.  
-Deployment [создал](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/yml/multitool.yaml) 
-Ошибку удалось обойти только созданием `kubectl create configmap` и монтированием путей, что запрашивал multitool  
-в итоге повесил multitool на 80 порт, а nginx на 81  
+Deployment [создал](https://github.com/AlekseyDrobnyi/netology_devops/blob/main/12.3/yml/multitool.yaml)  
+Ошибку исправил, переопределив порть для multitool-a на `1180` и `11443`  
 Deployment успешно создается, replic-и успешно получается увеличивать.
 ```bash
-ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl describe pods multitool-9698bbc54-cztkd
-Name:             multitool-9698bbc54-cztkd
-Namespace:        default
-Priority:         0
-Service Account:  default
-Node:             k8s/10.129.0.17
-Start Time:       Sun, 02 Apr 2023 14:21:55 +0700
-Labels:           app=multi
-                  pod-template-hash=9698bbc54
-Annotations:      cni.projectcalico.org/containerID: f8caa10fe7fe195dc494f04ea50d29af7fe83cab01c67188d693061e602c6a5b
-                  cni.projectcalico.org/podIP: 10.1.77.40/32
-                  cni.projectcalico.org/podIPs: 10.1.77.40/32
-Status:           Running
-IP:               10.1.77.40
-IPs:
-  IP:           10.1.77.40
-Controlled By:  ReplicaSet/multitool-9698bbc54
-Containers:
-  multitool:
-    Container ID:   containerd://2001cf06c52709ed1382bc011715720732cb4dd2c4e27dc15e32d6795d20b51e
-    Image:          wbitt/network-multitool
-    Image ID:       docker.io/wbitt/network-multitool@sha256:82a5ea955024390d6b438ce22ccc75c98b481bf00e57c13e9a9cc1458eb92652
-    Port:           80/TCP
-    Host Port:      0/TCP
-    State:          Running
-      Started:      Sun, 02 Apr 2023 14:21:58 +0700
-    Ready:          True
-    Restart Count:  0
-    Environment:    <none>
-    Mounts:
-      /usr/share/nginx/html from config (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-c4pr6 (ro)
-  nginx:
-    Container ID:   containerd://a9c9e38acad36f5be899415fbf361c985465df5472d2a7bbd6550b492f84810e
-    Image:          nginx:1.19
-    Image ID:       docker.io/library/nginx@sha256:df13abe416e37eb3db4722840dd479b00ba193ac6606e7902331dcea50f4f1f2
-    Port:           81/TCP
-    Host Port:      0/TCP
+ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+multitool                    1/1     Running   0          5h34m
+multitool-86b94869bc-xnbrf   2/2     Running   0          9s
+ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl logs -f multitool-86b94869bc-xnbrf -c nginx
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+
+ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl logs -f multitool-86b94869bc-xnbrf -c multitool
+The directory /usr/share/nginx/html is not mounted.
+Therefore, over-writing the default index.html file with some useful information:
+WBITT Network MultiTool (with NGINX) - multitool-86b94869bc-xnbrf - 10.1.77.42 - HTTP: 1180 , HTTPS: 11443 . (Formerly praqma/network-multitool)
+Replacing default HTTP port (80) with the value specified by the user - (HTTP_PORT: 1180).
+Replacing default HTTPS port (443) with the value specified by the user - (HTTPS_PORT: 11443).
+
 ```
 
 
@@ -81,15 +63,17 @@ ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl apply -f multitool.yaml
 deployment.apps/multitool configured
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl get pods
 NAME                        READY   STATUS    RESTARTS   AGE
-multitool                   1/1     Running   0          29m
-multitool-9698bbc54-cztkd   2/2     Running   0          5s
+multitool                   1/1     Running   0          5h34m
+multitool-86b94869bc-xnbrf  2/2     Running   0          5s
+
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl apply -f multitool.yaml
 deployment.apps/multitool configured
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl get pods
-NAME                        READY   STATUS    RESTARTS   AGE
-multitool                   1/1     Running   0          28m
-multitool-9698bbc54-cztkd   2/2     Running   0          25s
-multitool-9698bbc54-2b74k   2/2     Running   0          11s
+NAME                         READY   STATUS    RESTARTS   AGE
+multitool                    1/1     Running   0          5h36m
+multitool-86b94869bc-xnbrf   2/2     Running   0          2m35s
+multitool-86b94869bc-v86qr   2/2     Running   0          6s
+
 ```
 
 4. Создать Service, который обеспечит доступ до реплик приложений из п.1.  
@@ -108,22 +92,41 @@ svcmultitool   ClusterIP   10.152.183.251   <none>        80/TCP    7s
 Получили хоть какой-то, но ответ. Вероятно ошибся где-то уже в часом конфиге nginx-a. Но `curl` отработал
 ```bash
 ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl get pods
-NAME                        READY   STATUS    RESTARTS   AGE
-multitool                   1/1     Running   0          28m
-multitool-9698bbc54-cztkd   2/2     Running   0          25s
-multitool-9698bbc54-2b74k   2/2     Running   0          11s
+NAME                         READY   STATUS    RESTARTS   AGE
+multitool                    1/1     Running   0          5h36m
+multitool-86b94869bc-xnbrf   2/2     Running   0          2m35s
+multitool-86b94869bc-v86qr   2/2     Running   0          6s
 
-ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl exec multitool -- curl 10.152.183.251
-<html>
-<head><title>403 Forbidden</title></head>
-<body>
-<center><h1>403 Forbidden</h1></center>
-<hr><center>nginx/1.20.2</center>
-</body>
-</html>
+
+ubuntu@ubuntu-VirtualBox:~/.kube$ kubectl exec multitool -- curl 10.152.183.227
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100   153  100   153    0     0   233k      0 --:--:-- --:--:-- --:--:--  149k
+100   612  100   612    0     0   869k      0 --:--:-- --:--:-- --:--:--  597k
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
 ```
 ------
 
