@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myingress
+spec:
+  rules:
+  - host:
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: svcfront
+            port:
+              number: 8080
+      - path: /api
+        pathType: Prefix      
+        backend:
+          service:
+            name: svcback
+            port:
+              number: 1180        
+
