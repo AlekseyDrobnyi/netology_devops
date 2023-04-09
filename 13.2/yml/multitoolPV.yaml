@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: multi
+  name: multitool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi
+  template:
+    metadata:
+      labels:
+        app: multi
+    spec:
+      containers:          
+      - name: multitool
+        image: wbitt/network-multitool  
+        volumeMounts:
+        - name: volume
+          mountPath: /multitool
+      volumes:
+      - name: volume
+        persistentVolumeClaim:
+          claimName: pvc
+          
+      
+
+
+          

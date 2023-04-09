@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: multi
+  name: multitool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi
+  template:
+    metadata:
+      labels:
+        app: multi
+    spec:
+      containers:          
+      - name: multitool
+        image: wbitt/network-multitool  
+        volumeMounts:
+        - name: my-volume
+          mountPath: /multitool
+      - name: busybox
+        image: busybox
+        command: ['sh', '-c', 'while true; do echo Write! >> /output/file.txt; sleep 10; done']
+        volumeMounts:
+        - name: my-volume
+          mountPath: /output
+      volumes:
+      - name: my-volume
+        persistentVolumeClaim:
+          claimName: pvc
+          
+      
+
+
+          
