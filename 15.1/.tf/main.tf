@@ -4,7 +4,7 @@ provider "yandex" {
   folder_id = var.yc_folder-id
   zone      = var.yc_region
 }
-
+ 
 resource "yandex_vpc_network" "network-netology" {
   name = "network-netology"
 }
